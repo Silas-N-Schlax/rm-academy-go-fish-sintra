@@ -1,22 +1,17 @@
 require_relative '../../lib/go_fish/turn_result'
 require_relative '../../lib/go_fish/card'
 require_relative '../../lib/go_fish/player'
-require_relative '../../lib/go_fish/user'
 
 describe TurnResult do
   let(:results) do
     described_class.new(
-      current_user: User.new('socket', 1),
-      opponent: User.new('socket', 2),
+      current_player: Player.new('Player1'),
+      opponent: Player.new('Player2'),
       cards_taken: [Card.new('K', 'Hearts')],
       card_asked_for: 'K',
       card_picked_up: Card.new('J'),
       goes_again: false
     )
-  end
-  before do
-    results.current_user.name = 'Player1'
-    results.opponent.name = 'Player2'
   end
 
   describe '#for_current' do

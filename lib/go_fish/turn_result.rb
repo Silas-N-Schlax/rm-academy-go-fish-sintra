@@ -1,11 +1,11 @@
 # Turn results class
 class TurnResult
-  attr_accessor :current_user, :opponent, :cards_taken,
+  attr_accessor :current_player, :opponent, :cards_taken,
                 :card_asked_for, :card_picked_up,
                 :goes_again
 
-  def initialize(current_user:, opponent:, cards_taken:, card_asked_for:, card_picked_up:, goes_again:)
-    @current_user = current_user
+  def initialize(current_player:, opponent:, cards_taken:, card_asked_for:, card_picked_up:, goes_again:)
+    @current_player = current_player
     @opponent = opponent
     @cards_taken = cards_taken
     @card_asked_for = card_asked_for.upcase
@@ -34,7 +34,7 @@ class TurnResult
   end
 
   def went_fishing
-    "#{current_user.name} went fishing, they#{goes_again ? ' ' : ' do not '}get to go again."
+    "#{current_player.name} went fishing, they#{goes_again ? ' ' : ' do not '}get to go again."
   end
 
   private
@@ -48,10 +48,10 @@ class TurnResult
   end
 
   def for_all_got_cards
-    "#{current_user.name} asked for a #{card_asked_for} and took the following cards from #{opponent.name}:"
+    "#{current_player.name} asked for a #{card_asked_for} and took the following cards from #{opponent.name}:"
   end
 
   def for_all_got_no_cards
-    "#{current_user.name} asked for a #{card_asked_for}, #{opponent.name} did not have any #{card_asked_for}'s."
+    "#{current_player.name} asked for a #{card_asked_for}, #{opponent.name} did not have any #{card_asked_for}'s."
   end
 end
