@@ -11,7 +11,7 @@ class GoFishGame
   SMALL_GAME_MAX_SIZE = 2
   LARGE_GAME_MAX_SIZE = 6
 
-  def initialize(players)
+  def initialize(players = [])
     @players = players
     @deck = Deck.new
     @current_player_idx = 0
@@ -41,6 +41,10 @@ class GoFishGame
 
   def winner
     winning_player if deck.empty? && players.all? { |player| player.empty_hand? }
+  end
+
+  def add_player(name)
+    players << Player.new(name)
   end
 
   def next_player_turn

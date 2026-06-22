@@ -65,6 +65,35 @@ describe GoFishGame do
     end
   end
 
+  describe '#add_player' do
+    context 'when a new player is added' do
+      let(:game) { described_class.new }
+      let(:name) { 'Player1' }
+      it 'creates a new player instance' do
+        expect(game.add_player(name).first).to be_a Player
+      end
+
+      it 'adds player to players array' do
+        game.add_player(name)
+        expected_game_size = 1
+        expect(game.players.size).to eq expected_game_size
+      end
+    end
+
+    context 'when two players are added' do
+      let(:game) { described_class.new }
+      before do
+        game.add_player('Player1')
+        game.add_player('Player2')
+      end
+
+      it 'two players are added to game' do
+        expected_game_size = 2
+        expect(game.players.size).to eq expected_game_size
+      end
+    end
+  end
+
   describe '#next_player_turn' do
     let(:game) { described_class.new([player1, player2]) }
     it 'sets current player turn to player2' do
