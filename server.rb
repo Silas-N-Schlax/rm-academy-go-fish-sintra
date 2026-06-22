@@ -6,7 +6,7 @@ require_relative 'lib/go_fish/player'
 class Server < Sinatra::Base
   enable :sessions
   def self.game
-    @@game ||= Game.new
+    @@game ||= GoFishGame.new
   end
 
   def self.api_keys
@@ -24,15 +24,21 @@ class Server < Sinatra::Base
   end
 
   get '/game' do
-    session_name = self.class.api_keys[session[:api_key]]
-    slim :game, locals: { name: session_name }
+    slim :game, locals: { game: game }
   end
 
   post '/join' do
     api_key = Base64.urlsafe_encode64("#{params[:name]}:#{(Time.now.to_f * 1000).to_i}")
     session[:api_key] = api_key
     self.class.api_keys[api_key] = params[:name]
+    game.add_player(params[:name])
     redirect '/game'
+  end
+
+  private
+
+  def game
+    self.class.game
   end
 end
 

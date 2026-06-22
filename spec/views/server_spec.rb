@@ -22,6 +22,27 @@ describe Server do
       before do
         sessions.each_with_index do |session, i|
           session.visit '/'
+          session.fill_in :name, with: "Player #{i + 1}"
+          session.click_on 'Join'
+        end
+      end
+      it 'each player is displayed on the screen', :js do
+        sessions.each do |session|
+          session.visit '/game'
+          expect(session).to have_content 'Player 1'
+          expect(session).to have_content 'Player 2'
+        end
+      end
+    end
+
+    context 'when multiple players join with the same name' do
+      let!(:session1) { Capybara::Session.new(:rack_test, Server.new) }
+      let!(:session2) { Capybara::Session.new(:rack_test, Server.new) }
+      let(:sessions) { [session1, session2] }
+
+      before do
+        sessions.each do |session|
+          session.visit '/'
           session.fill_in :name, with: "John"
           session.click_on 'Join'
         end
