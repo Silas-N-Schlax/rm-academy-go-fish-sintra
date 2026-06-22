@@ -29,7 +29,7 @@ RSpec.configure do |config|
       Capybara.current_driver = :playwright
     end
 
-    # ^ Rspec f
+    # ^ Rspec focus
     config.filter_run_when_matching :focus
   end
 
