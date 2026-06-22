@@ -1,0 +1,14 @@
+AllCops:
+  NewCops: enable
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: never
+
+Metrics/MethodLength:
+  Max: 7
+
+Lint/SuppressedException:
+  Enabled: false
