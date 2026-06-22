@@ -1,2 +1,36 @@
+/* ^ Themes */
 @import './core/theme/theme.css';
-@import './core/layout.css';
+
+
+/* ^ Components */
+@import './components/card-collection.css';
+@import './components/playing-card.css';
+@import './components/game-feed.css';
+@import './components/message-bubble.css';
+@import './components/game-action.css';
+@import './components/game.css';
+@import './components/panel.css';
+@import './components/players.css';
+@import './components/game-card.css';
+@import './components/game-row.css';
+@import './components/game-list.css';
+@import './components/history.css';
+@import './components/leaderboard.css';
+
+
+/* ^ Optics Overrides */
+@import './components/optics-overrides/text-pair.css';
+@import './components/optics-overrides/content-header.css';
+@import './components/optics-overrides/btn.css';
+@import './components/optics-overrides/accordion.css';
+@import './components/optics-overrides/icon.css';
+
+
+body {
+  overflow: hidden;
+  background-color: var(--op-color-neutral-plus-max);
+}
+
+html {
+  scrollbar-color: var(--op-color-primary-plus-four) var(--op-color-neutral-plus-seven);
+}
