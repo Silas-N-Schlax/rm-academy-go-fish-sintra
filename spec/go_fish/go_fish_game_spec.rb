@@ -76,7 +76,7 @@ describe GoFishGame do
       it 'adds player to players array' do
         game.add_player(name)
         expected_game_size = 1
-        expect(game.players.size).to eq expected_game_size
+        expect(game.game_size).to eq expected_game_size
       end
     end
 
@@ -89,8 +89,27 @@ describe GoFishGame do
 
       it 'two players are added to game' do
         expected_game_size = 2
-        expect(game.players.size).to eq expected_game_size
+        expect(game.game_size).to eq expected_game_size
       end
+    end
+  end
+
+  describe '#game_size' do
+    let(:game) { described_class.new }
+    it 'returns 0 when no there are no players' do
+      expect(game.game_size).to be_zero
+    end
+
+    it 'returns 1 when there is one player' do
+      game.add_player('player1')
+      expected_game_size = 1
+      expect(game.game_size).to eq expected_game_size
+    end
+    it 'returns 2 when there are two players' do
+      game.add_player('P1')
+      game.add_player('P2')
+      expected_game_size = 2
+      expect(game.game_size).to eq expected_game_size
     end
   end
 

@@ -47,6 +47,10 @@ class GoFishGame
     players << Player.new(name)
   end
 
+  def game_size
+    players.size
+  end
+
   def next_player_turn
     new_index = current_player_idx + 1
     first_player_idx = 0
