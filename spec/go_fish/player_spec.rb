@@ -1,13 +1,10 @@
 require_relative '../../lib/go_fish/player'
-require_relative '../../lib/go_fish/user'
 require_relative '../../lib/go_fish/card'
 require_relative '../../lib/go_fish/book'
 
 describe Player do
-  let!(:user) { User.new('socket', 1) }
-  before { user.name = 'Player1' }
   describe '#add_cards' do
-    let(:player) { described_class.new(user) }
+    let(:player) { described_class.new('player1') }
     let(:card1) { Card.new('A', 'Spades') }
     let(:card2) { Card.new('K', 'Spades') }
     context 'when player has no cards' do
@@ -48,7 +45,7 @@ describe Player do
   end
 
   describe '#hand_size' do
-    let(:player) { described_class.new(user) }
+    let(:player) { described_class.new('player1') }
     it 'returns the current hand size' do
       expect(player.hand_size).to eq 0
     end
@@ -65,7 +62,7 @@ describe Player do
   end
 
   describe '#take_cards_of_rank' do
-    let(:player) { described_class.new(user) }
+    let(:player) { described_class.new('player') }
     context 'when player does not have the correct card' do
       it 'returns nil' do
         expect(player.take_cards_of_rank('A')).to be_empty
@@ -98,7 +95,7 @@ describe Player do
   end
 
   describe '#format_hand' do
-    let(:player) { described_class.new(user) }
+    let(:player) { described_class.new('Player1') }
     before do
       player.add_cards([Card.new('A'), Card.new('K')])
     end
@@ -108,7 +105,7 @@ describe Player do
     end
   end
   describe '#books_size' do
-    let(:player) { described_class.new(user) }
+    let(:player) { described_class.new('player1') }
     it 'returns the current hand size' do
       expect(player.books_size).to eq 0
     end
@@ -122,7 +119,7 @@ describe Player do
     end
   end
   describe '#cards?' do
-    let(:player) { described_class.new(user) }
+    let(:player) { described_class.new('player1') }
     it 'returns false if no cards found' do
       card_rank = 'J'
       expect(player.card?(card_rank)).to be false
@@ -142,7 +139,7 @@ describe Player do
   end
 
   describe '#empty_hand?' do
-    let(:player) { described_class.new(user) }
+    let(:player) { described_class.new('player1') }
     it 'returns false if hand is full' do
       player.add_cards([Card.new('J')])
       expect(player.empty_hand?).to be false
@@ -154,7 +151,7 @@ describe Player do
   end
 
   describe '#formatted_player_details' do
-    let(:player) { described_class.new(user) }
+    let(:player) { described_class.new('player1') }
     before do
       player.add_cards([Card.new('J'), Card.new('K')])
       player.books << Book.new('2')
@@ -165,7 +162,7 @@ describe Player do
     end
   end
   describe '#format_books' do
-    let(:player) { described_class.new(user) }
+    let(:player) { described_class.new('player1') }
     before do
       player.books = [Book.new('A'), Book.new('K')]
     end

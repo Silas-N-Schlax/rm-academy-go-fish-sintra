@@ -1,11 +1,11 @@
 require_relative 'book'
 # Player class
 class Player
-  attr_reader :user
+  attr_reader :name
   attr_accessor :hand, :books
 
-  def initialize(user)
-    @user = user
+  def initialize(name)
+    @name = name
     @hand = []
     @books = []
   end
@@ -29,7 +29,7 @@ class Player
   end
 
   def format_hand
-    message_ary = ["#{user.name}, you have the following cards in your hand:"]
+    message_ary = ["#{name}, you have the following cards in your hand:"]
     hand.each do |card|
       message_ary << "- #{card}"
     end
