@@ -1,6 +1,13 @@
 
-form action='/join' method='POST'
-  .form-group
-    label.form-label#name for='name' Name
-    input.form-control.form-control--small name='name' type='Text' placeholder='Name' minlength=3
-    button.btn.btn--primary type='submit' Join
+.container.container--xs
+  .login
+    .login__body
+      .login__logo
+        img.login__logo-img alt='go fish game logo' src='./logo.png'
+
+      .login__form
+        form action='/join' method='POST'
+          .form-group
+            input.form-control.form-control--small name='name' type='Text' placeholder='Name' minlength=4
+
+        button.btn.btn--primary.login__button type='submit' Join
