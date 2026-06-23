@@ -129,16 +129,33 @@ describe GoFishGame do
   describe '#run_turn' do
     let(:card1) { Card.new('A') }
     context 'when a turn is run with 2 players' do
+      context 'when player1 starts their turn with no cards' do
+        let(:game) { described_class.new([player1, player2]) }
+        let(:player1_data) { game.players.first }
+        let(:player2_data) { game.players.last }
+        before do
+          player1_data.hand = []
+          game.deck.cards = [card1]
+        end
+        it 'adds card to players hand, and its still their turn' do
+          game.run_turn('player2', 'K')
+          expected_hand_size = 1
+          expect(player1_data.hand_size).to eq expected_hand_size
+          expect(game.current_player.name).to eq player1_data.name
+        end
+      end
+
       context 'when player1 is asking player2 for a card they have' do
         let(:game) { described_class.new([player1, player2]) }
         let!(:player1_data) { game.players.first }
         let!(:player2_data) { game.players.last }
         before do
           player2_data.hand << card1
+          player1_data.hand << card1
           game.run_turn('player2', 'A')
         end
         it 'player 1 gets the cards added to their hand' do
-          expected_hand_size = 1
+          expected_hand_size = 2
           expect(player1_data.hand_size).to eq expected_hand_size
         end
         it 'player2 gets the cards removed from their hand' do
@@ -151,7 +168,7 @@ describe GoFishGame do
           end
           context 'player1 does not take a card from player2' do
             it 'card is added to player1 hand from deck' do
-              expected_hand_size = 2
+              expected_hand_size = 3
               expect(player1_data.hand_size).to eq expected_hand_size
             end
             it 'current player is set to player2' do
@@ -196,10 +213,11 @@ describe GoFishGame do
         context 'when player1 does not pick up that card' do
           before do
             game.current_player_idx = 1
+            player2_data.hand << Card.new('J')
             game.run_turn('player1', 'A')
           end
           it 'card is added to player1 hand' do
-            expected_hand_size = 1
+            expected_hand_size = 2
             expect(player2_data.hand_size).to eq expected_hand_size
           end
           it 'current player is set to next player in queue' do
@@ -209,13 +227,16 @@ describe GoFishGame do
       end
       context 'when there deck is empty and a player goes fishing' do
         let(:game) { described_class.new([player1, player2]) }
+        let!(:player1_data) { game.players.first }
         let!(:player2_data) { game.players.last }
         before do
           game.deck.cards = []
+          player1_data.hand << Card.new('J')
           game.run_turn('player1', 'A')
         end
         it 'does not give the player a card' do
-          expect(player2_data.hand_size).to be_zero
+          expected_hand_size = 1
+          expect(player1_data.hand_size).to eq expected_hand_size
         end
         it 'sets the current player to next player in the queue' do
           expect(game.current_player.name).to eq player2_data.name

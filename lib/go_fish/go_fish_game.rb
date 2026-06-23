@@ -19,24 +19,19 @@ class GoFishGame
   end
 
   def start
-    # deck.cards = [Card.new('J')]
+    # deck.cards = [Card.new('J'), Card.new('2'), Card.new('K')]
     # players.first.hand = [Card.new('J'), Card.new('J')]
-    # players.last.hand = [Card.new('J')]
-    # ^ For Testing Server and Sockets Only
+    # players.last.hand = [Card.new('J'), Card.new('K')]
+    # ^ For Testing Only
     deck.shuffle_deck
     deal
   end
 
   def run_turn(player_name, rank)
+    return current_player.add_cards([deck.top_card]) if current_player.hand.empty?
     return if winner || find_player(player_name).nil?
 
-    current_player = self.current_player
-    player_in_question = find_player(player_name)
-    cards = player_in_question.take_cards_of_rank(rank)
-
-    current_player.add_cards(cards) unless cards.empty?
-    fishing_card = go_fish(rank) if cards.empty?
-    generate_turn_result(player_in_question, rank, cards, fishing_card, current_player)
+    handle_turn(player_name, rank)
   end
 
   def winner
@@ -96,6 +91,16 @@ class GoFishGame
   end
 
   private
+
+  def handle_turn(player_name, rank)
+    current_player = self.current_player
+    player_in_question = find_player(player_name)
+    cards = player_in_question.take_cards_of_rank(rank)
+
+    current_player.add_cards(cards) unless cards.empty?
+    fishing_card = go_fish(rank) if cards.empty?
+    generate_turn_result(player_in_question, rank, cards, fishing_card, current_player)
+  end
 
   def deal
     number_of_cards_to_deal.times do
