@@ -6,6 +6,7 @@
 
   .login__body {
     background-color: var(--op-color-primary-plus-six);
+    color: var(--op-color-primary-on-plus-six);
     padding: var(--op-space-large);
     display: flex;
     flex-direction: column;
