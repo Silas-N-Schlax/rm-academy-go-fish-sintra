@@ -32,7 +32,7 @@ class Card
   end
 
   def to_s
-    "#{SPELLED_RANKS[rank]} of #{suit}"
+    "#{SPELLED_RANKS[rank]}_of_#{suit}".downcase
   end
 
   def ==(other)

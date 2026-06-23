@@ -30,12 +30,12 @@ describe Card do
   describe '#to_s' do
     it 'returns card as formatted string' do
       card = described_class.new('A')
-      expected_output = 'Ace of Spades'
+      expected_output = 'ace_of_spades'
       expect(card.to_s).to eq expected_output
     end
     it 'returns card as a formatted string' do
       card = described_class.new('10')
-      expected_output = '10 of Spades'
+      expected_output = '10_of_spades'
       expect(card.to_s).to eq expected_output
     end
   end
