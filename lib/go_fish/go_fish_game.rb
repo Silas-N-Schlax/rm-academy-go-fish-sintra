@@ -3,13 +3,13 @@ require_relative 'card'
 require_relative 'turn_result'
 # Go Fish Game Class
 class GoFishGame
-  attr_accessor :deck, :current_player_idx, :results
-  attr_reader :players
+  attr_accessor :deck, :current_player_idx, :results, :players
 
   SMALL_HAND = 5
   LARGE_HAND = 7
   SMALL_GAME_MAX_SIZE = 2
   LARGE_GAME_MAX_SIZE = 6
+  DECK_SIZE = 52
 
   def initialize(players = [])
     @players = players
@@ -65,8 +65,10 @@ class GoFishGame
     players[current_player_idx]
   end
 
-  def latest_result
-    results.last
+  def started?
+    return true unless deck.cards_left == DECK_SIZE
+
+    false
   end
 
   def list_of_ranks(name)
