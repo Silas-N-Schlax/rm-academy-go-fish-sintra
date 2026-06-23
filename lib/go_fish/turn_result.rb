@@ -13,45 +13,35 @@ class TurnResult
     @goes_again = goes_again
   end
 
-  def for_current
-    message_ary = [cards_taken.empty? ? for_current_got_no_cards : for_current_got_cards]
-    cards_taken.each do |card|
-      message_ary << "- #{card}"
-    end
-    message_ary
+  def question
+    ["#{current_player.name} asked ", opponent.name, ' for any ', card_asked_for, 's']
   end
 
-  def for_all
-    message_ary = [cards_taken.empty? ? for_all_got_no_cards : for_all_got_cards]
-    cards_taken.each do |card|
-      message_ary << "- #{card}"
-    end
-    message_ary
+  def answer
+    return "#{opponent.name} had #{cards_taken.length} #{card_asked_for}s" unless cards_taken.empty?
+
+    "Go Fish: #{opponent.name} didn't have any #{card_asked_for}s"
   end
 
-  def go_fish
-    "You went fishing and picked up a #{card_picked_up}. You#{goes_again ? ' ' : ' do not '}get to go again."
+  def go_fish_current
+    return if card_picked_up.nil?
+
+    "You drew a #{card_picked_up.rank} of #{card_picked_up.suit} #{got_what_wanted_current}"
   end
 
-  def went_fishing
-    "#{current_player.name} went fishing, they#{goes_again ? ' ' : ' do not '}get to go again."
+  def go_fish_all
+    return if card_picked_up.nil?
+
+    "#{current_player.name} drew a card #{got_what_wanted_all}"
   end
 
   private
 
-  def for_current_got_cards
-    "You asked for a #{card_asked_for}, took the following from #{opponent.name}:"
+  def got_what_wanted_current
+    "and #{goes_again ? 'get' : 'do not get'} to go again"
   end
 
-  def for_current_got_no_cards
-    "You asked for a #{card_asked_for}, #{opponent.name} did not have any #{card_asked_for}'s."
-  end
-
-  def for_all_got_cards
-    "#{current_player.name} asked for a #{card_asked_for} and took the following cards from #{opponent.name}:"
-  end
-
-  def for_all_got_no_cards
-    "#{current_player.name} asked for a #{card_asked_for}, #{opponent.name} did not have any #{card_asked_for}'s."
+  def got_what_wanted_all
+    "and #{goes_again ? 'gets' : 'does not get'} to go again"
   end
 end
