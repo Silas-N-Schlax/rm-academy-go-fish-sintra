@@ -4,7 +4,7 @@ class Player
   attr_reader :name
   attr_accessor :hand, :books
 
-  def initialize(name)
+  def initialize(name = 'Player1')
     @name = name
     @hand = []
     @books = []
@@ -28,7 +28,6 @@ class Player
     cards_of_rank
   end
 
-
   def card?(rank)
     hand.any? { |card| card.rank == rank }
   end
@@ -39,6 +38,14 @@ class Player
 
   def books_size
     books.size
+  end
+
+  def ranks
+    all_ranks = []
+    hand.map do |card|
+      all_ranks << card.rank
+    end
+    all_ranks
   end
 
   private

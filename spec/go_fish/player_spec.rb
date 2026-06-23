@@ -140,4 +140,19 @@ describe Player do
       expect(player.empty_hand?).to be true
     end
   end
+
+  describe '#ranks' do
+    let(:player) { described_class.new }
+    before do
+      player.hand = [Card.new('J'), Card.new('J')]
+    end
+    it 'returns all ranks in array' do
+      result = player.ranks
+      expected_size = 2
+      expect(result.size).to eq expected_size
+      result.each do |rank|
+        expect(rank).to be_a String
+      end
+    end
+  end
 end
