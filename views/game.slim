@@ -23,10 +23,8 @@
       .panel__content
         .game-feed
           .game-feed__logs
-            / - binding.irb
-            / .game-feed__turn
-            /   p testing
-            / & loop here
+            - game.results.each do |result|
+                == slim :feed_turn, locals: { result: result, current_player: current_player.name }
 
         form.game-action action='/ask' method='POST'
           .game-action__options
