@@ -10,6 +10,6 @@ class Book
   end
 
   def to_s
-    "Book of #{Card::SPELLED_RANKS[rank]}"
+    "#{Card::SPELLED_RANKS[rank].downcase}_of_hearts"
   end
 end
