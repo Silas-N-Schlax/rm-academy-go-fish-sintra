@@ -2,10 +2,10 @@ require 'sinatra'
 
 require_relative 'lib/go_fish/go_fish_game'
 require_relative 'lib/go_fish/player'
-
+# Server class + Sinatra App
 class Server < Sinatra::Base
-
   MIN_GAME_SIZE = 2
+  DECK_SIZE = 52
 
   enable :sessions
   def self.game
@@ -29,8 +29,7 @@ class Server < Sinatra::Base
   get '/game' do
     return redirect '/' unless self.class.api_keys[session[:api_key]]
     start_game_if_possible
-    name = self.class.api_keys[session[:api_key]]
-    slim :game, locals: { game: game, current_player: game.find_player(name) }
+    slim :game, locals: { game: game, current_player: game.find_player(current_player_name) }
   end
 
   post '/join' do
@@ -41,7 +40,23 @@ class Server < Sinatra::Base
     redirect '/game'
   end
 
+  get '/wrong-turn' do
+    slim :wrong_turn
+  end
+
+  post '/ask' do
+    return redirect '/game' if game.deck.cards_left == DECK_SIZE
+    return redirect '/wrong-turn' unless current_player_name == game.current_player.name
+
+    game.run_turn(params[:players], params[:ranks])
+    redirect '/game'
+  end
+
   private
+
+  def current_player_name
+    self.class.api_keys[session[:api_key]]
+  end
 
   def game
     self.class.game
@@ -55,6 +70,3 @@ class Server < Sinatra::Base
     game.start
   end
 end
-
-
-
