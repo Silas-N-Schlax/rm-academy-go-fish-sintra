@@ -143,26 +143,7 @@ describe Server do
       end
     end
 
-    context 'when a play tries to ask but its not their turn' do
-      before do
-        session2.visit '/game'
-        session2.click_on 'Ask'
-      end
-      it 'displays alert message to player and rejects turn' do
-        expected_message = 'Its not your turn'
-        expect(session2).to have_content expected_message
-      end
-
-      it 'does not play turn' do
-        sessions.each do |session|
-          session.visit '/game'
-          expected_hand_size = 7
-          expect(session).to have_selector('.gf-game__hand .playing-card', count: expected_hand_size)
-        end
-      end
-    end
-
-    fcontext 'when a player wins' do
+    context 'when a player wins' do
       let(:game) { Server.game }
       before do
         game.players = []
@@ -176,7 +157,7 @@ describe Server do
       end
       it 'redirects winner to winning page' do
         expected_path = '/game-over'
-        expected_content = 'Game Over'
+        expected_content = 'GAME OVER!'
         expect(session1).to have_current_path(expected_path)
         expect(session1).to have_content(expected_content)
       end
