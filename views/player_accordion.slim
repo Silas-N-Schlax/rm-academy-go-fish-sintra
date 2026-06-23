@@ -1,6 +1,6 @@
 details.accordion
   summary.accordion__header
-    i.icon.li.li--chevron-right.accordion__marker
+    i.icon.li.li-chevron-right.accordion__marker
     span.accordion__label #{player.name}
 
     .accordion__content
@@ -10,8 +10,8 @@ details.accordion
         span.text-pair__title.text-pair__title--small #{player.hand_size}
 
       .text-pair.text-pair--inline
-        span.text-pair__subtitle.text-pair__subtitle--small
-          span.icon.li.li-library-big.icon--medium.icon--neutral data-tooltip-text="Books" data-tooltip-position="left"
+        span.text-pair__subtitle.text-pair__subtitle--small data-tooltip-text="Books" data-tooltip-position="left"
+          i.icon.li.li-library-big.icon--medium.icon--neutral
         span.text-pair__title.text-pair__title--small #{player.books_size}
 
   .accordion__details
