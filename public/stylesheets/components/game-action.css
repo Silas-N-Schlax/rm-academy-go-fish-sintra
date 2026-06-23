@@ -18,7 +18,7 @@
     gap: var(--op-space-2x-small);
     padding: 0;
   }
-  
+
   .game-action__button {
     width: 100%;
   }

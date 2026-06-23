@@ -1,3 +1,44 @@
-p Players
-- game.players.each do |player|
-  p = player.name
+.gf-game
+  .gf-game__board.gf-game--border
+    .panel
+      .panel__header.panel__header--tile
+        a href='./'
+          i.li.li-move-left.icon--x-large.panel__header-link
+        span Game 1
+
+      .panel__content
+        .players
+          .players__header Players
+          .players__details
+            - game.players.each do |player|
+              == slim :player_accordion, locals: { player: player }
+
+  .gf-game__feed.gf-game--border
+    .panel.panel--secondary
+      .panel__header.panel__header--game-feed
+        Game Feed
+        button.badge.badge--primary Your Turn
+        / ^ Dynamic?
+
+      .panel__content
+        .game-feed
+          .game-feed__logs
+            .game-feed__turn
+              p testing
+            / & loop here
+
+        .game-action
+          .game-action__options
+            .form-group.game-action__option
+              label.form-label for='player' Player
+              select.form-control-form-control--small name='player' id='player'
+                / & Loop options generation here
+                option value='Gabe' Gabe
+
+            .form-group.game-action__option
+              label.form-label for='card-rank' Rank
+              select.form-control-form-control--small name='card-rank' id='card-rank'
+                / & Loop options generation here
+                option value='Gabe' Seven
+
+          button.btn.btn--primary.btn-small.game-action__button Ask Gabe for Sevens
