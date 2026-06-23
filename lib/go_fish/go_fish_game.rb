@@ -27,11 +27,11 @@ class GoFishGame
     deal
   end
 
-  def run_turn(player_id, rank)
-    return if winner || find_player(player_id).nil?
+  def run_turn(player_name, rank)
+    return if winner || find_player(player_name).nil?
 
     current_player = self.current_player
-    player_in_question = find_player(player_id)
+    player_in_question = find_player(player_name)
     cards = player_in_question.take_cards_of_rank(rank)
 
     current_player.add_cards(cards) unless cards.empty?
