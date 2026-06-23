@@ -31,6 +31,13 @@ body {
   background-color: var(--op-color-neutral-plus-max);
 }
 
+p, a {
+  padding: none;
+  margin: none;
+  text-decoration: none;
+  color: inherit
+}
+
 html {
   scrollbar-color: var(--op-color-primary-plus-four) var(--op-color-neutral-plus-seven);
 }

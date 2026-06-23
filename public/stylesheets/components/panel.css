@@ -40,12 +40,12 @@
       padding-block: var(--op-space-small) var(--op-space-x-small);
       font-size: var(--op-font-small);
     }
-    
+
     .panel__header--link {
       color: var(--op-color-neutral-on-plus-max);
     }
   }
-  
+
   &.panel--secondary {
     background-color: var(--op-color-primary-plus-eight);
     color: var(--op-color-primary-on-plus-eight);
