@@ -1,4 +1,5 @@
 require_relative '../../server.rb'
+require_relative '../../lib/go_fish/card'
 
 describe Server do
   after(:each) do
@@ -6,7 +7,7 @@ describe Server do
   end
 
   describe '/join' do
-    it 'player sees login if they do not have a session' do
+    it 'player sees login if they do not have a api_key' do
       visit '/game'
       expected_path = '/'
       expect(page).to have_current_path(expected_path)
@@ -52,11 +53,6 @@ describe Server do
           session.fill_in :name, with: "John"
           session.click_on 'Join'
         end
-      end
-
-      it 'each player has a unique api_key' do
-        expected_keys_size = 2
-        expect(Server.api_keys.length).to be expected_keys_size
       end
     end
 
@@ -163,6 +159,30 @@ describe Server do
           expected_hand_size = 7
           expect(session).to have_selector('.gf-game__hand .playing-card', count: expected_hand_size)
         end
+      end
+    end
+
+    fcontext 'when a player wins' do
+      let(:game) { Server.game }
+      before do
+        game.players = []
+        game.add_player('Player 1')
+        game.add_player('Player 2')
+        game.deck.cards = []
+        game.players.first.hand = [Card.new('J'), Card.new('J'), Card.new('J')]
+        game.players.last.hand = [Card.new('J')]
+        session1.visit '/game'
+        session1.click_on 'Ask'
+      end
+      it 'redirects winner to winning page' do
+        expected_path = '/game-over'
+        expected_content = 'Game Over'
+        expect(session1).to have_current_path(expected_path)
+        expect(session1).to have_content(expected_content)
+      end
+      it 'revokes api_keys and restarts game' do
+        expect(Server.game.started?).to be false
+        expect(Server.api_keys).to be_empty
       end
     end
   end

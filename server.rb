@@ -5,7 +5,6 @@ require_relative 'lib/go_fish/player'
 # Server class + Sinatra App
 class Server < Sinatra::Base
   MIN_GAME_SIZE = 2
-  DECK_SIZE = 52
 
   enable :sessions
   def self.game
@@ -22,18 +21,21 @@ class Server < Sinatra::Base
   end
 
   get '/' do
-    return redirect '/game' if self.class.api_keys[session[:api_key]]
+    return redirect '/game' if authenticated?
+
     slim :login
   end
 
   get '/game' do
-    return redirect '/' unless self.class.api_keys[session[:api_key]]
+    return redirect '/' unless authenticated?
+    return redirect '/game-over' if game.winner
+
     start_game_if_possible
     slim :game, locals: { game: game, current_player: game.find_player(current_player_name) }
   end
 
   post '/join' do
-    api_key = Base64.urlsafe_encode64("#{params[:name]}:#{(Time.now.to_f * 1000).to_i}")
+    api_key = Base64.urlsafe_encode64("#{params[:name]}:#{Time.new.to_f}")
     session[:api_key] = api_key
     self.class.api_keys[api_key] = params[:name]
     game.add_player(params[:name])
@@ -44,15 +46,31 @@ class Server < Sinatra::Base
     slim :wrong_turn
   end
 
+  get '/game-over' do
+    self.class.reset!
+
+    slim :game_over
+  end
+
   post '/ask' do
-    return redirect '/game' if game.deck.cards_left == DECK_SIZE
+    return redirect '/' unless authenticated?
+    return redirect '/game' unless game.started?
+    # ^ create method on game (started?)
+
     return redirect '/wrong-turn' unless current_player_name == game.current_player.name
 
     game.run_turn(params[:players], params[:ranks])
+
     redirect '/game'
   end
 
   private
+
+  def authenticated?
+    return true if current_player_name
+
+    false
+  end
 
   def current_player_name
     self.class.api_keys[session[:api_key]]
