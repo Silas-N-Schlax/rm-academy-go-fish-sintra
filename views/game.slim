@@ -17,8 +17,10 @@
     .panel.panel--secondary
       .panel__header.panel__header--game-feed
         Game Feed
-        button.badge.badge--primary Your Turn
-        / ^ Dynamic?
+        - if current_player == game.current_player
+          button.badge.badge--notice Your Turn
+        - else
+          button.badge.badge--primary #{game.current_player.name}'s Turn
 
       .panel__content
         .game-feed
@@ -42,8 +44,10 @@
                   - return if rank.nil?
                   option#rank-option = rank
 
-          button.btn.btn--primary.btn-small.game-action__button Ask
-          // ^ Make this auto update to whatever the selection is
+          - if current_player.name == game.current_player.name
+            button.btn.btn--primary.btn-small.game-action__button Ask For Cards
+          - else
+            button.btn.btn--primary.btn-small.game-action__button disabled=true Ask For Cards
 
   .gf-game__hand.gf-game--border
     .panel.panel--neutral
