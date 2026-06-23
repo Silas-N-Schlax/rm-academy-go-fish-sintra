@@ -3,7 +3,7 @@
     .panel
       .panel__header.panel__header--title
         a href='./'
-          i.li.li-move-left.icon--x-large.panel__header-link
+          i.li.li-move-left.icon.icon--x-large.panel__header-link
         span Game 1
 
       .panel__content
@@ -23,25 +23,29 @@
       .panel__content
         .game-feed
           .game-feed__logs
-            .game-feed__turn
-              p testing
+            / - binding.irb
+            / .game-feed__turn
+            /   p testing
             / & loop here
 
-        .game-action
+        form.game-action action='/ask' method='POST'
           .game-action__options
             .form-group.game-action__option
-              label.form-label for='player' Player
-              select.form-control.form-control--small name='player' id='player'
-                / & Loop options generation here
-                option value='Gabe' Gabe
+              label.form-label for='players' Player
+              select.form-control.form-control--small name='players' id='players'
+                - game.list_of_players(current_player.name).each do |player|
+                  - return if player.nil?
+                  option#player-option value="#{player}" = player
 
             .form-group.game-action__option
-              label.form-label for='card-rank' Rank
-              select.form-control.form-control--small name='card-rank' id='card-rank'
-                / & Loop options generation here
-                option value='Gabe' Seven
+              label.form-label for='ranks' Rank
+              select.form-control.form-control--small name='ranks' id='ranks'
+                - game.list_of_ranks(current_player.name).each do |rank|
+                  - return if rank.nil?
+                  option#rank-option value="#{rank}" = rank
 
-          button.btn.btn--primary.btn-small.game-action__button Ask Gabe for Sevens
+          button.btn.btn--primary.btn-small.game-action__button Ask
+          // ^ Make this auto update to whatever the selection is
 
   .gf-game__hand.gf-game--border
     .panel.panel--neutral
