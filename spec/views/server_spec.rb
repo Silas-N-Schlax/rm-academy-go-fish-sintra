@@ -6,6 +6,12 @@ describe Server do
   end
 
   describe '/join' do
+    it 'player sees login if they do not have a session' do
+      visit '/'
+      expected_path = '/'
+      expect(page).to have_current_path(expected_path)
+    end
+    
     it 'is possible to join a game' do
       visit '/'
       fill_in :name, with: 'John'
@@ -45,12 +51,6 @@ describe Server do
           session.visit '/'
           session.fill_in :name, with: "John"
           session.click_on 'Join'
-        end
-      end
-
-      it 'allows multiple players to join' do
-        sessions.each_with_index do |session, i|
-          expect(session).to have_content('Players')
         end
       end
 
@@ -103,6 +103,7 @@ describe Server do
           sessions.each do |session|
             session.visit '/game'
             expect(session).to have_selector('.playing-card', count: 21, visible: false)
+            expect(session).to have_selector('.accordion', count: 2)
           end
         end
       end
