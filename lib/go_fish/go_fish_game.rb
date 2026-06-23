@@ -69,6 +69,18 @@ class GoFishGame
     results.last
   end
 
+  def list_of_ranks(name)
+    find_player(name).ranks
+  end
+
+  def list_of_players(current_player)
+    all_players = []
+    players.map do |player|
+      all_players << player.name unless player.name == current_player
+    end
+    all_players
+  end
+
   def valid_rank?(rank)
     Card.valid_rank?(rank)
   end

@@ -269,6 +269,35 @@ describe GoFishGame do
     end
   end
 
+  describe '#list_of_ranks' do
+    context 'when a player has 3 cards' do
+      let(:player_name) { 'Player1' }
+      let(:game) { described_class.new([Player.new(player_name)]) }
+      before do
+        game.players.first.hand = [Card.new('J'), Card.new('J'), Card.new('J')]
+      end
+
+      it 'returns all of players ranks' do
+        expected_size = 3
+        expect(game.list_of_ranks(player_name).size).to eq expected_size
+      end
+    end
+  end
+
+  describe '#list_of_players' do
+    context 'when there are two players' do
+      let(:player_name) { 'Player2' }
+      let(:game) { described_class.new([Player.new, Player.new(player_name)]) }
+      it 'returns a list of players that is not the current player' do
+        result = game.list_of_players(player_name)
+        expected_size = 1
+        expected_name = 'Player1'
+        expect(result.size).to eq expected_size
+        expect(result.first).to eq expected_name
+      end
+    end
+  end
+
  # ^ Validation methods
   describe '#valid_rank?' do
     let(:game) { described_class.new([player1, player2]) }
