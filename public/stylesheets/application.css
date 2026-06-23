@@ -17,6 +17,7 @@
 @import './components/history.css';
 @import './components/leaderboard.css';
 @import './components/login.css';
+@import './components/app-alert.css';
 
 /* ^ Optics Overrides */
 @import './components/optics-overrides/text-pair.css';
