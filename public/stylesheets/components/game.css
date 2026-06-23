@@ -11,7 +11,7 @@
   grid-template-areas:
    "game-board game-feed"
    "player-hand player-books";
-  
+
   .gf-game--border {
     border: solid var(--op-border-width) var(--op-color-border);
   }
@@ -24,11 +24,12 @@
   .gf-game__cards {
     padding-bottom: var(--op-space-2x-large);
     padding: var(--op-space-medium)
-    
+
   }
 
   .gf-game__feed {
     grid-area: game-feed;
+    overflow: visible;
   }
 
   .gf-game__hand {
@@ -51,21 +52,18 @@
     --_gf-hand-min-width: calc(var(--op-size-unit) * 70); /* 280px */
     --_gf-books-min-width: calc(var(--op-size-unit) * 50); /* 200px */
 
-    overflow: auto;
+    /* overflow: auto; */
 
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(1fr, var(--_gf-board-min-width))
-                        minmax(1fr, var(--_gf-feed-min-width))
-                        minmax(var(--_gf-hand-min-width))
-                        minmax(var(--_gf-books-min-width));
-  
+    grid-template-rows: 1fr 1fr 1fr 2fr;
+
     grid-template-areas:
     "game-board"
-    "game-feed"
     "player-hand"
-    "player-books";
+    "player-books"
+    "game-feed";
 
-    .gf-game__board {
+    /* .gf-game__board {
       overflow: visible;
     }
 
@@ -75,6 +73,6 @@
 
     .gf-game__books {
       overflow: visible;
-    }
+    } */
   }
 }
