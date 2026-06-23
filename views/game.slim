@@ -33,14 +33,14 @@
               select.form-control.form-control--small name='players' id='players'
                 - game.list_of_players(current_player.name).each do |player|
                   - return if player.nil?
-                  option#player-option value="#{player}" = player
+                  option#player-option = player
 
             .form-group.game-action__option
               label.form-label for='ranks' Rank
               select.form-control.form-control--small name='ranks' id='ranks'
                 - game.list_of_ranks(current_player.name).each do |rank|
                   - return if rank.nil?
-                  option#rank-option value="#{rank}" = rank
+                  option#rank-option = rank
 
           button.btn.btn--primary.btn-small.game-action__button Ask
           // ^ Make this auto update to whatever the selection is
