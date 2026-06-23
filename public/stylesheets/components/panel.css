@@ -13,7 +13,7 @@
     height: var(--_gf-navbar-height);
     border-bottom: solid var(--op-border-width) var(--op-color-border);
     color: var(--op-color-neutral-on-plus-max);
-    
+
     &.panel__header--slim {
       display: flex;
       align-items: center;
@@ -58,5 +58,7 @@
 
   .panel__content {
     overflow: auto;
+    display: flex;
+    flex-direction: column;
   }
 }
