@@ -42,3 +42,21 @@
                 option value='Gabe' Seven
 
           button.btn.btn--primary.btn-small.game-action__button Ask Gabe for Sevens
+
+  .gf-game__hand.gf-game--border
+    .panel.panel--neutral
+      .panel__header.panel__header--slim Your Cards
+      .panel__content
+        .gf-game__cards
+          - if current_player.hand.empty?
+          - else
+            == slim :card_collection, locals: {hand: current_player.hand, modifier: '--large', back: false}
+
+  .gf-game__books.gf-game--border
+    .panel.panel--neutral
+      .panel__header.panel__header--slim Your Books
+      .panel__content
+        .gf-game__cards
+          - if current_player.hand.empty?
+          - else
+            == slim :card_collection, locals: {hand: current_player.books, modifier: '--medium', back: false}

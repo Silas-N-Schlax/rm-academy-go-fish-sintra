@@ -5,7 +5,7 @@ describe Server do
     Server.reset!
   end
 
-  context '/join' do
+  describe '/join' do
     it 'is possible to join a game' do
       visit '/'
       fill_in :name, with: 'John'
@@ -26,7 +26,7 @@ describe Server do
           session.click_on 'Join'
         end
       end
-      it 'each player is displayed on the screen', :js do
+      it 'each player is displayed on the screen' do
         sessions.each do |session|
           session.visit '/game'
           expect(session).to have_content 'Player 1'
@@ -68,6 +68,43 @@ describe Server do
 
         visit '/'
         expect(page).to have_content('Players')
+      end
+    end
+  end
+
+  describe '/game' do
+    context 'when the player does not have a session' do
+      it 'redirects to login page' do
+        visit '/game'
+        expected_path = '/'
+        expect(current_path).to eq expected_path
+      end
+    end
+
+    context 'when the player does have a session' do
+      context 'when there are two players' do
+        let!(:session1) { Capybara::Session.new(:rack_test, Server.new) }
+        let!(:session2) { Capybara::Session.new(:rack_test, Server.new) }
+        let(:sessions) { [session1, session2] }
+        before do
+          sessions.each_with_index do |session, i|
+            session.visit '/'
+            session.fill_in :name, with: "Player #{i + 1}"
+            session.click_on 'Join'
+          end
+        end
+        it 'starts the game' do
+          Server.game.players.each do |player|
+            expect(player.hand).to_not be_empty
+          end
+        end
+
+        it 'loads the content on the page for the correct player' do
+          sessions.each do |session|
+            session.visit '/game'
+            expect(session).to have_selector('.playing-card', count: 21, visible: false)
+          end
+        end
       end
     end
   end

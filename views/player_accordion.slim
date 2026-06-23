@@ -16,8 +16,6 @@ details.accordion
 
   .accordion__details
     .accordion__playing-cards
-      .card-collection
-        p cards here
+      == slim :card_collection, locals: {hand: player.hand, modifier: '', back: true}
     .accordion__books
-      .card-collection.card-collection--x-small
-        p books here
+      == slim :card_collection, locals: {hand: player.books, modifier: '--x-small', back: false}
