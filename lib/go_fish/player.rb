@@ -28,25 +28,6 @@ class Player
     cards_of_rank
   end
 
-  def format_hand
-    message_ary = ["#{name}, you have the following cards in your hand:"]
-    hand.each do |card|
-      message_ary << "- #{card}"
-    end
-    message_ary
-  end
-
-  def formatted_player_details
-    "Cards: #{hand_size} | Books: #{books_size}"
-  end
-
-  def format_books
-    message_ary = ['Books:']
-    books.each do |book|
-      message_ary << "- #{book}s"
-    end
-    message_ary
-  end
 
   def card?(rank)
     hand.any? { |card| card.rank == rank }
