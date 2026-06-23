@@ -17,7 +17,7 @@ function changeOffset() {
     let minOffset = 15 // desktop min offset
     if (window.innerWidth < 800) minOffset = 5 // mobile min offset
 
-    const cardWidth = cards[1].width
+    const cardWidth = cards[0].width
     const cardsLength = cards.length
     let containerWidth = collection.offsetWidth
 
