@@ -12,6 +12,7 @@ function changeOffset() {
   console.log(cardCollections)
   cardCollections.forEach((collection) => {
     cards = collection.querySelectorAll('.playing-card')
+    if (cards.length == 0) return
 
     let minOffset = 15 // desktop min offset
     if (window.innerWidth < 800) minOffset = 5 // mobile min offset
