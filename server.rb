@@ -55,7 +55,6 @@ class Server < Sinatra::Base
   post '/ask' do
     return redirect '/' unless authenticated?
     return redirect '/game' unless game.started?
-    # ^ create method on game (started?)
 
     return redirect '/wrong-turn' unless current_player_name == game.current_player.name
 
