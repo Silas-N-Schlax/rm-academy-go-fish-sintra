@@ -34,42 +34,78 @@ describe TurnResult do
     end
   end
 
-  describe '#go_fish_current' do
-    context 'returns message telling player what they picked up' do
-      it 'player gets what they wanted' do
-        expected_message = 'You drew a J of Spades and do not get to go again'
-        expect(results.go_fish_current).to eq expected_message
+  describe '#go_fish' do
+    let(:current) { 'Player1' }
+    let(:opponent) { 'Player2' }
+    context 'when its the current player' do
+      context 'returns message telling player what they picked up' do
+        it 'player gets what they wanted' do
+          expected_message = 'You drew a J of Spades and do not get to go again'
+          expect(results.go_fish(current)).to eq expected_message
+        end
+        it 'player does not get what they wanted' do
+          results.goes_again = true
+          expected_message = 'You drew a J of Spades and get to go again'
+          expect(results.go_fish(current)).to eq expected_message
+        end
       end
-      it 'player does not get what they wanted' do
+    end
+
+    context 'when its the opponent' do
+      it 'returns message when player gets what they wanted' do
         results.goes_again = true
-        expected_message = 'You drew a J of Spades and get to go again'
-        expect(results.go_fish_current).to eq expected_message
+        expected_message = 'Player1 drew a card and gets to go again'
+        expect(results.go_fish(opponent)).to eq expected_message
+      end
+
+      it 'returns message when player did not get what they wanted' do
+        expected_message = 'Player1 drew a card and does not get to go again'
+        expect(results.go_fish(opponent)).to eq expected_message
+      end
+
+      it 'returns nil when player did not go fishing' do
+        results.card_picked_up = nil
+        expect(results.go_fish(opponent)).to be_nil
       end
     end
-
-    it 'returns nil when player did not go fishing' do
-      results.card_picked_up = nil
-      expect(results.go_fish_current).to be_nil
-    end
   end
 
-  describe '#go_fish_all' do
-    it 'returns message when player gets what they wanted' do
-      results.goes_again = true
-      expected_message = 'Player1 drew a card and gets to go again'
-      expect(results.go_fish_all).to eq expected_message
-    end
+  # describe '#go_fish_current' do
+  #   context 'returns message telling player what they picked up' do
+  #     it 'player gets what they wanted' do
+  #       expected_message = 'You drew a J of Spades and do not get to go again'
+  #       expect(results.go_fish_current).to eq expected_message
+  #     end
+  #     it 'player does not get what they wanted' do
+  #       results.goes_again = true
+  #       expected_message = 'You drew a J of Spades and get to go again'
+  #       expect(results.go_fish_current).to eq expected_message
+  #     end
+  #   end
 
-    it 'returns message when player did not get what they wanted' do
-      expected_message = 'Player1 drew a card and does not get to go again'
-      expect(results.go_fish_all).to eq expected_message
-    end
+  #   it 'returns nil when player did not go fishing' do
+  #     results.card_picked_up = nil
+  #     expect(results.go_fish_current).to be_nil
+  #   end
+  # end
 
-    it 'returns nil when player did not go fishing' do
-      results.card_picked_up = nil
-      expect(results.go_fish_all).to be_nil
-    end
-  end
+  # describe '#go_fish_all' do
+  #   it 'returns message when player gets what they wanted' do
+  #     results.goes_again = true
+  #     expected_message = 'Player1 drew a card and gets to go again'
+  #     expect(results.go_fish_all).to eq expected_message
+  #   end
+
+  #   it 'returns message when player did not get what they wanted' do
+  #     expected_message = 'Player1 drew a card and does not get to go again'
+  #     expect(results.go_fish_all).to eq expected_message
+  #   end
+
+  #   it 'returns nil when player did not go fishing' do
+  #     results.card_picked_up = nil
+  #     expect(results.go_fish_all).to be_nil
+  #   end
+  # end
 
   # describe '#for_current' do
   #   it 'returns the message for the current players if they got cards' do

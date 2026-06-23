@@ -23,6 +23,15 @@ class TurnResult
     "Go Fish: #{opponent.name} didn't have any #{card_asked_for}s"
   end
 
+  def go_fish(name)
+    return go_fish_current if name == current_player.name
+
+    go_fish_all
+  end
+
+
+  private
+
   def go_fish_current
     return if card_picked_up.nil?
 
@@ -34,8 +43,6 @@ class TurnResult
 
     "#{current_player.name} drew a card #{got_what_wanted_all}"
   end
-
-  private
 
   def got_what_wanted_current
     "and #{goes_again ? 'get' : 'do not get'} to go again"
