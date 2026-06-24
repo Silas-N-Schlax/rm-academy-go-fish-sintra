@@ -43,7 +43,7 @@ describe Server do
       end
     end
 
-    fcontext 'when multiple players join with the same name' do
+    context 'when multiple players join with the same name' do
       let!(:session1) { Capybara::Session.new(:rack_test, Server.new) }
       let!(:session2) { Capybara::Session.new(:rack_test, Server.new) }
       let(:sessions) { [session1, session2] }
@@ -51,7 +51,7 @@ describe Server do
       before do
         sessions.each do |session|
           session.visit '/'
-          session.fill_in :name, with: "John"
+          session.fill_in :name, with: 'John'
           session.click_on 'Join'
         end
       end
@@ -62,6 +62,20 @@ describe Server do
         expect(session1).to have_current_path(expected_path)
         expect(session2).to have_current_path(expected_path1)
         expect(session2).to have_content(expected_content)
+      end
+    end
+
+    context 'when a player sends a name with zero characters' do
+      before do
+        visit '/'
+        fill_in :name, with: ''
+        click_on 'Join'
+      end
+      it 'sends back to login with error message' do
+        expected_path = '/wrong-name'
+        expected_content = 'That name is already taken'
+        expect(page).to have_current_path(expected_path)
+        expect(page).to have_content(expected_content)
       end
     end
 

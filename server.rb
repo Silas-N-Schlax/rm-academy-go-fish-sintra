@@ -35,7 +35,7 @@ class Server < Sinatra::Base
   end
 
   post '/join' do
-    return redirect '/wrong-name' if name_taken?(params[:name])
+    return redirect '/wrong-name' unless name_valid?(params[:name])
 
     api_key = Base64.urlsafe_encode64("#{params[:name]}:#{Time.new.to_f}")
     session[:api_key] = api_key
@@ -70,10 +70,11 @@ class Server < Sinatra::Base
 
   private
 
-  def name_taken?(name)
-    return true if api_keys.values.include?(name)
+  def name_valid?(name)
+    return false if name.empty?
+    return false if api_keys.values.include?(name)
 
-    false
+    true
   end
 
   def authenticated?
