@@ -100,8 +100,8 @@ class GoFishGame
       'turn_index' => current_player_idx,
       'players' => players.map(&:hash),
       'hand' => current_player.hand.map(&:hash),
-      'round_results' => [latest_result.hash(name)]
-    }.to_json
+      'round_results' => results.map { |result| result.hash(current_player.name) }
+    }
   end
 
   private
