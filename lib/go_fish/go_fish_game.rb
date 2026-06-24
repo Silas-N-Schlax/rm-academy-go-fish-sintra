@@ -90,6 +90,20 @@ class GoFishGame
     deck.empty? && current_player.empty_hand?
   end
 
+  def latest_result
+    results.last
+  end
+
+  def as_json(name)
+    current_player = find_player(name)
+    {
+      'turn_index' => current_player_idx,
+      'players' => players.map(&:hash),
+      'hand' => current_player.hand.map(&:hash),
+      'round_results' => [latest_result.hash(name)]
+    }.to_json
+  end
+
   private
 
   def handle_turn(player_name, rank)

@@ -55,6 +55,14 @@ class Player
     hand.sort_by { |card| Card.value(card.rank) }
   end
 
+  def hash
+    {
+      'name' => name,
+      'books' => books.map(&:rank),
+      'book_count' => books_size
+    }
+  end
+
   private
 
   def create_book_if_possible

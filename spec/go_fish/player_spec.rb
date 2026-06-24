@@ -169,7 +169,6 @@ describe Player do
     end
     it 'returns sorted array by rank' do
       sorted_array = [card1, card2, card]
-      # binding.irb
       expect(player.sort_hand).to eq sorted_array
     end
   end

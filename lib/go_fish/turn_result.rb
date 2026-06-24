@@ -29,6 +29,14 @@ class TurnResult
     go_fish_all
   end
 
+  def hash(name)
+    {
+      'current_player' => current_player.name,
+      'rank' => card_asked_for,
+      'went_fishing' => went_fishing?,
+      'display' => "#{answer}. #{bot_message(name)}"
+    }
+  end
 
   private
 
@@ -50,5 +58,17 @@ class TurnResult
 
   def got_what_wanted_all
     "and #{goes_again ? 'gets' : 'does not get'} to go again"
+  end
+
+  def bot_message(name)
+    return go_fish_current if current_player.name == name
+
+    go_fish_all
+  end
+
+  def went_fishing?
+    return true if card_picked_up
+
+    false
   end
 end

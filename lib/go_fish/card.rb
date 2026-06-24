@@ -39,6 +39,13 @@ class Card
     rank == other.rank && suit == other.suit
   end
 
+  def hash
+    {
+      'rank' => rank,
+      'suit' => suit
+    }
+  end
+
   def self.valid_rank?(rank)
     RANKS.include?(rank.upcase)
   end

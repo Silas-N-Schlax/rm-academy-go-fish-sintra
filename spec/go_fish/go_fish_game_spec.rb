@@ -1,6 +1,7 @@
 require_relative '../../lib/go_fish/card'
 require_relative '../../lib/go_fish/go_fish_game'
 require_relative '../../lib/go_fish/book'
+require_relative '../../lib/go_fish/turn_result'
 
 describe GoFishGame do
   let(:player1) { Player.new('player1') }
@@ -299,6 +300,31 @@ describe GoFishGame do
         expect(result.size).to eq expected_size
         expect(result.first).to eq expected_name
       end
+    end
+  end
+  describe '#latest_result' do
+    let(:game) { described_class.new([user1, user2]) }
+    before do
+      game.results << TurnResult.new(
+        current_player: nil, opponent: nil,
+        card_asked_for: 'K', cards_taken: nil,
+        card_picked_up: nil, goes_again: nil
+      )
+    end
+  end
+
+  describe '#as_json' do
+    let(:game) { described_class.new([Player.new('Player1'), Player.new('Player1')]) }
+    before do
+      game.start
+      game.results << TurnResult.new(
+        current_player: Player.new('Player1'), opponent: Player.new('Player2'),
+        card_asked_for: 'K', cards_taken: [],
+        card_picked_up: nil, goes_again: false
+      )
+    end
+    it 'returns json that matches schema' do
+      expect(game.as_json('Player1')).to match_json_schema('game')
     end
   end
 
