@@ -29,7 +29,7 @@
             - game.results.each do |result|
                 == slim :feed_turn, locals: { result: result, current_player: current_player.name }
 
-        form.game-action action='/ask' method='POST'
+        form.game-action action='/game' method='POST'
           .game-action__options
             .form-group.game-action__option
               label.form-label for='players' Player

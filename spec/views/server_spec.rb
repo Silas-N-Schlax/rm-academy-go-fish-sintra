@@ -150,7 +150,7 @@ describe Server do
     end
   end
 
-  describe '/ask' do
+  describe 'POST /game' do
     let!(:session1) { Capybara::Session.new(:rack_test, Server.new) }
     let!(:session2) { Capybara::Session.new(:rack_test, Server.new) }
     let(:sessions) { [session1, session2] }
