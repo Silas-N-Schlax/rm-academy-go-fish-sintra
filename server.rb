@@ -71,14 +71,18 @@ class Server < Sinatra::Base
     slim :game_over
   end
 
-  post '/ask' do
+  post '/game' do
     return redirect_to('/') unless authenticate!
     return redirect_to('/game') unless game.started?
 
-    return redirect('/wrong-turn') unless current_player_name == game.current_player.name
+    name = current_player_name || current_json_player_name
+    return redirect('/wrong-turn') unless name == game.current_player.name
 
-    game.run_turn(params[:players], params[:ranks])
-    redirect '/game'
+    game.run_turn(player, rank)
+    respond_to do |f|
+      f.html { redirect '/game' }
+      f.json { json game.as_json(current_json_player_name) }
+    end
   end
 
   private
@@ -117,6 +121,18 @@ class Server < Sinatra::Base
     Rack::Auth::Basic::Request.new(request.env)
   end
 
+  def player
+    return params[:players] if params[:players]
+
+    params[:player]
+  end
+
+  def rank
+    return params[:ranks] if params[:ranks]
+
+    params[:rank]
+  end
+
   def name_valid?(name)
     return false if name.empty?
     return false if api_keys.values.include?(name)
@@ -125,7 +141,7 @@ class Server < Sinatra::Base
   end
 
   def current_player_name
-    self.class.api_keys[session[:api_key]]
+    api_keys[session[:api_key]]
     # ! Shorten with api_keys method
   end
 
