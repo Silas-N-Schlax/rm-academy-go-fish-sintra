@@ -9,5 +9,8 @@
         form action='/join' method='POST'
           .form-group
             input.form-control.form-control--small name='name' type='Text' placeholder='Name' minlength=4
+            - if errors
+              .form-error-summary
+                .h2 #{errors.first}
 
           button.btn.btn--primary.login__button type='submit' Join

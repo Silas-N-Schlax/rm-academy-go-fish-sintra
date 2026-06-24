@@ -23,7 +23,7 @@ class Server < Sinatra::Base
   get '/' do
     return redirect '/game' if authenticated?
 
-    slim :login
+    slim :login, locals: { errors: nil }
   end
 
   get '/game' do
@@ -35,11 +35,17 @@ class Server < Sinatra::Base
   end
 
   post '/join' do
+    return redirect '/wrong-name' if name_taken?(params[:name])
+
     api_key = Base64.urlsafe_encode64("#{params[:name]}:#{Time.new.to_f}")
     session[:api_key] = api_key
     self.class.api_keys[api_key] = params[:name]
     game.add_player(params[:name])
     redirect '/game'
+  end
+
+  get '/wrong-name' do
+    slim :login, locals: { errors: ['That name is already taken'] }
   end
 
   get '/wrong-turn' do
@@ -64,6 +70,12 @@ class Server < Sinatra::Base
 
   private
 
+  def name_taken?(name)
+    return true if api_keys.values.include?(name)
+
+    false
+  end
+
   def authenticated?
     return true if current_player_name
 
@@ -76,6 +88,10 @@ class Server < Sinatra::Base
 
   def game
     self.class.game
+  end
+
+  def api_keys
+    self.class.api_keys
   end
 
   def start_game_if_possible
