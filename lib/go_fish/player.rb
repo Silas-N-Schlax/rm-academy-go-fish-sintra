@@ -48,6 +48,10 @@ class Player
     all_ranks
   end
 
+  def sort_hand
+    hand.sort_by(&:rank)
+  end
+
   private
 
   def create_book_if_possible

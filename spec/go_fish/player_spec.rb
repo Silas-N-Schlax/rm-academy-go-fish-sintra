@@ -155,4 +155,18 @@ describe Player do
       end
     end
   end
+
+  describe '#sort_hand' do
+    let(:player) { described_class.new }
+    let(:card) { Card.new('J') }
+    let(:card1) { Card.new('2') }
+    let(:card2) { Card.new('3') }
+    before do
+      player.hand = [card, card1, card2]
+    end
+    it 'returns sorted array by rank' do
+      sorted_array = [card1, card2, card]
+      expect(player.sort_hand).to eq sorted_array
+    end
+  end
 end
