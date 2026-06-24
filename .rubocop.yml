@@ -12,3 +12,6 @@ Metrics/MethodLength:
 
 Lint/SuppressedException:
   Enabled: false
+
+Style/ClassVars:
+  Enabled: false
