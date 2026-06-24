@@ -48,7 +48,7 @@ class Player
 
       all_ranks << card.rank
     end
-    all_ranks
+    all_ranks.sort_by { |str| Card.value(str) }
   end
 
   def sort_hand
