@@ -1,4 +1,5 @@
 require_relative 'book'
+require_relative 'card'
 # Player class
 class Player
   attr_reader :name
@@ -49,7 +50,7 @@ class Player
   end
 
   def sort_hand
-    hand.sort_by(&:rank)
+    hand.sort_by { |card| Card.value(card.rank) }
   end
 
   private
