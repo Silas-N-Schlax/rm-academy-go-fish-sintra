@@ -59,7 +59,6 @@ class Server < Sinatra::Base
     return redirect '/wrong-turn' unless current_player_name == game.current_player.name
 
     game.run_turn(params[:players], params[:ranks])
-
     redirect '/game'
   end
 
@@ -80,8 +79,7 @@ class Server < Sinatra::Base
   end
 
   def start_game_if_possible
-    first_player = game.players.first
-    return unless first_player.hand_size.zero?
+    return if game.started?
     return unless game.players.size == MIN_GAME_SIZE
 
     game.start

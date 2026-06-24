@@ -11,7 +11,8 @@
           .players__header Players
           .players__details
             - game.players.each do |player|
-              == slim :player_accordion, locals: { player: player }
+              - unless current_player.name == player.name
+                == slim :player_accordion, locals: { player: player }
 
   .gf-game__feed.gf-game--border
     .panel.panel--secondary

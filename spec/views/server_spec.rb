@@ -18,7 +18,6 @@ describe Server do
       fill_in :name, with: 'John'
       click_on 'Join'
       expect(page).to have_content('Players')
-      expect(page).to have_content('John'), 'Expected Player to be added to the game'
     end
 
     context 'when multiple players join' do
@@ -36,9 +35,11 @@ describe Server do
       it 'each player is displayed on the screen' do
         sessions.each do |session|
           session.visit '/game'
-          expect(session).to have_content 'Player 1'
-          expect(session).to have_content 'Player 2'
         end
+        player1_name = 'Player 1'
+        player2_name = 'Player 2'
+        expect(session1).to have_content(player2_name)
+        expect(session2).to have_content(player1_name)
       end
     end
 
@@ -98,8 +99,8 @@ describe Server do
         it 'loads the content on the page for the correct player' do
           sessions.each do |session|
             session.visit '/game'
-            expected_card_count = 21
-            expected_accordion_count = 2
+            expected_card_count = 14
+            expected_accordion_count = 1
             expect(session).to have_selector('.playing-card', count: expected_card_count, visible: false)
             expect(session).to have_selector('.accordion', count: expected_accordion_count)
           end
