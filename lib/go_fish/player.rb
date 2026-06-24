@@ -44,6 +44,8 @@ class Player
   def ranks
     all_ranks = []
     hand.map do |card|
+      next if all_ranks.include?(card.rank)
+
       all_ranks << card.rank
     end
     all_ranks

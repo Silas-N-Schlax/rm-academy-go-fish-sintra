@@ -278,11 +278,11 @@ describe GoFishGame do
       let(:player_name) { 'Player1' }
       let(:game) { described_class.new([Player.new(player_name)]) }
       before do
-        game.players.first.hand = [Card.new('J'), Card.new('J'), Card.new('J')]
+        game.players.first.hand = [Card.new('J'), Card.new('J'), Card.new('10')]
       end
 
       it 'returns all of players ranks' do
-        expected_size = 3
+        expected_size = 2
         expect(game.list_of_ranks(player_name).size).to eq expected_size
       end
     end

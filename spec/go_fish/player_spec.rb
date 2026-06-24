@@ -144,11 +144,11 @@ describe Player do
   describe '#ranks' do
     let(:player) { described_class.new }
     before do
-      player.hand = [Card.new('J'), Card.new('J')]
+      player.hand = [Card.new('J'), Card.new('J'), Card.new('10'), Card.new('10'), Card.new('3')]
     end
     it 'returns all ranks in array' do
       result = player.ranks
-      expected_size = 2
+      expected_size = 3
       expect(result.size).to eq expected_size
       result.each do |rank|
         expect(rank).to be_a String

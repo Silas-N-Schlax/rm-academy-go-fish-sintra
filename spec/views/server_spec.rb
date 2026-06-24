@@ -129,11 +129,18 @@ describe Server do
         end
 
         context 'when the form controls are populated' do
+          before do
+            game = Server.game
+            game.start
+            game.players.each do |player|
+              player.hand = [Card.new('J'), Card.new('J'), Card.new('10'), Card.new('10'), Card.new('3')]
+            end
+          end
           it 'populates players and rank selections' do
             sessions.each do |session|
               session.visit '/game'
               expected_player_count = 1
-              expected_rank_count = 7
+              expected_rank_count = 3
               expect(session).to have_selector('#player-option', count: expected_player_count, visible: false)
               expect(session).to have_selector('#rank-option', count: expected_rank_count, visible: false)
             end
@@ -172,8 +179,6 @@ describe Server do
           expect(session).to have_selector('.game-feed__results')
         end
       end
-      # ^ add test to check hands to see if the cards have been traded?
-
     end
 
     context 'when a player wins' do
