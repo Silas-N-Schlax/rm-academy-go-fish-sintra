@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'httparty'
 gem 'puma'
 gem 'rack-contrib'
 gem 'rackup'
@@ -11,6 +12,7 @@ gem 'slim'
 group :test do
   gem 'capybara'
   gem 'capybara-playwright-driver'
+  gem 'json_matchers'
   gem 'rack-test'
   gem 'rspec'
 end
