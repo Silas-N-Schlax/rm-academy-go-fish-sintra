@@ -155,15 +155,25 @@ describe Server do
         session.click_on 'Join'
       end
     end
-    it 'plays a round' do
-      session1.visit '/game'
-      session1.click_on 'Ask'
-      sessions.each do |session|
-        session.visit '/game'
-        expect(session).to have_selector('.game-feed__turn')
-        expect(session).to have_selector('.game-feed__question')
-        expect(session).to have_selector('.game-feed__results')
+    context 'when a round is played' do
+      it 'a card has been added to the current players hand' do
+        session1.visit '/game'
+        session1.click_on 'Ask'
+        expected_count = 8
+        expect(session1).to have_selector('.gf-game__hand .playing-card', count: expected_count, visible: :all)
       end
+
+      it 'all players see a feed result' do
+        session1.visit '/game'
+        session1.click_on 'Ask'
+        sessions.each do |session|
+          session.visit '/game'
+          expect(session).to have_selector('.game-feed__question')
+          expect(session).to have_selector('.game-feed__results')
+        end
+      end
+      # ^ add test to check hands to see if the cards have been traded?
+
     end
 
     context 'when a player wins' do
