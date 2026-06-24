@@ -57,7 +57,7 @@
         .gf-game__cards
           - if current_player.hand.empty?
           - else
-            == slim :card_collection, locals: {hand: current_player.hand, modifier: '--large', back: false}
+            == slim :card_collection, locals: {hand: current_player.sort_hand, modifier: '--large', back: false}
 
   .gf-game__books.gf-game--border
     .panel.panel--neutral
