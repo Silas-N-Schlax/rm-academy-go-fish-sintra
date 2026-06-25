@@ -26,6 +26,11 @@ describe Server, type: :request do
       expect(last_response.status).to eq 401
     end
 
+    it 'prevents unauthorized request with wrong api_keys' do
+      get '/game', {}, http_header(Base64.encode64("#x:X").strip)
+      expect(last_response.status).to eq 401
+    end
+
     it 'allows authorized requests' do
       encoded = join_game
       get '/game', {}, http_header(encoded)
