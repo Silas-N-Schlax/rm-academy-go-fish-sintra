@@ -28,7 +28,10 @@ class Server < Sinatra::Base
   get '/' do
     return redirect_to('/game') if authenticate!
 
-    slim :login, locals: { errors: nil }
+    respond_to do |format|
+      format.html { slim :login, locals: { errors: nil } }
+      format.json { halt 400 }
+    end
   end
 
   get '/game' do
@@ -58,17 +61,24 @@ class Server < Sinatra::Base
   end
 
   get '/wrong-name' do
-    slim :login, locals: { errors: ['That name is already taken'] }
+    respond_to do |format|
+      format.html { slim :login, locals: { errors: ['That name is already taken'] } }
+      format.json { halt 400 }
+    end
   end
 
   get '/wrong-turn' do
-    slim :wrong_turn
+    respond_to do |format|
+      format.html { slim :wrong_turn }
+      format.json { halt 400 }
+    end
   end
 
   get '/game-over' do
     self.class.reset!
 
     slim :game_over
+    # ! How to reset if bot wins???
   end
 
   post '/game' do
@@ -91,12 +101,6 @@ class Server < Sinatra::Base
     return api_auth? if auth.provided?
 
     web_auth?
-
-    # auth = Rack::Auth::Basic::Request.new(request.env)
-
-    # return nil unless auth.provided? && auth.basic?
-
-    # api_keys = auth.username
   end
 
   def redirect_to(path)
@@ -142,7 +146,6 @@ class Server < Sinatra::Base
 
   def current_player_name
     api_keys[session[:api_key]]
-    # ! Shorten with api_keys method
   end
 
   def current_json_player_name

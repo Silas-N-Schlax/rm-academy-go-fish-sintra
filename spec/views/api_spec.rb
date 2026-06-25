@@ -12,10 +12,12 @@ describe Server, type: :request do
     Server.new
   end
 
-  it 'returns a response matching the join schema' do
-    post '/join', { 'name' => 'Bot' }.to_json, { 'HTTP_ACCEPT' => 'application/json', 'CONTENT_TYPE' => 'application/json' }
-    expect(last_response).to be_ok
-    expect(last_response).to match_json_schema('join')
+  describe 'GET /join' do
+    it 'returns a response matching the join schema' do
+      post '/join', { 'name' => 'Bot' }.to_json, { 'HTTP_ACCEPT' => 'application/json', 'CONTENT_TYPE' => 'application/json' }
+      expect(last_response).to be_ok
+      expect(last_response).to match_json_schema('join')
+    end
   end
 
   describe 'GET /game' do
@@ -49,6 +51,49 @@ describe Server, type: :request do
       expect(last_response).to be_ok
       expect(last_response.body).to match_json_schema('game')
       expect(JSON.parse(last_response.body)['round_results']).to_not be_empty
+    end
+  end
+
+  describe 'GET /' do
+    it 'returns 400' do
+      encoded = join_game
+      get '/', {}, http_header(encoded)
+      expect(last_response.status).to eq 400
+    end
+  end
+
+  describe 'GET /wrong-name' do
+    it 'returns 400' do
+      encoded = join_game
+      get '/wrong-name', {}, http_header(encoded)
+      expect(last_response.status).to eq 400
+    end
+  end
+
+  describe 'GET /wrong-turn' do
+    it 'returns 400' do
+      encoded = join_game
+      get '/wrong-turn', {}, http_header(encoded)
+      expect(last_response.status).to eq 400
+    end
+  end
+
+  describe 'GET /wrong-turn' do
+    let!(:encoded) { join_game }
+    let(:game) { Server.game }
+    before do
+      visit '/'
+      fill_in :name, with: 'John'
+      click_on 'Join'
+      game.deck.cards = []
+      game.players.first.hand = [Card.new('J'), Card.new('J'), Card.new('J')]
+      game.players.last.hand = [Card.new('J')]
+    end
+    it 'returns a response matching the game schema' do
+      post '/game', { 'rank' => 'J', 'player' => 'John' }.to_json, http_header(encoded)
+      expect(last_response).to be_ok
+      expect(last_response.body).to match_json_schema('game')
+      expect(JSON.parse(last_response.body)['winners']).to_not be_nil
     end
   end
 
