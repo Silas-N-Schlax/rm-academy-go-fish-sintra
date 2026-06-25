@@ -156,7 +156,7 @@ class Server < Sinatra::Base
   end
 
   def name_valid?(name)
-    # return false if name.empty?
+    return false if name.empty?
     return false if api_keys.values.include?(name)
 
     true
