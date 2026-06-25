@@ -54,12 +54,12 @@ class TurnResult
     got_card << [player, card]
   end
 
-  def hash(name)
+  def as_json(name)
     {
-      'current_player' => current_player.name,
-      'rank' => card_asked_for,
-      'went_fishing' => went_fishing?,
-      'display' => "#{answer}. #{bot_message(name)}"
+      current_player: current_player.name,
+      rank: card_asked_for,
+      went_fishing: went_fishing?,
+      display: "#{answer}. #{bot_message(name)}"
     }
   end
 

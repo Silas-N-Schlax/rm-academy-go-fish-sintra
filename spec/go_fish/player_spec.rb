@@ -173,10 +173,21 @@ describe Player do
     end
   end
 
-  describe '#hash' do
-    let(:player) { described_class.new }
+  describe '#as_json' do
+    let(:player) { described_class.new('Player1') }
+    let(:mock_hash) do
+      {
+        name: 'Player1',
+        books: ['K'],
+        book_count: 1
+      }
+    end
+    before do
+      player.books = [Book.new('K')]
+    end
     it 'returns hash that matches json schema' do
-      expect(player.hash.to_json).to match_json_schema('player')
+      expect(player.as_json).to eq mock_hash
+      expect(player.as_json.to_json).to match_json_schema('player')
     end
   end
 end

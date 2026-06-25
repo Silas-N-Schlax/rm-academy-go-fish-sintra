@@ -357,17 +357,34 @@ describe GoFishGame do
   end
 
   describe '#as_json' do
-    let(:game) { described_class.new([Player.new('Player1'), Player.new('Player1')]) }
-    before do
-      game.start
-      game.results << TurnResult.new(
+    let(:player1) { Player.new('Player1') }
+    let(:player2) { Player.new('Player2') }
+    let(:game) { described_class.new([player1, player2]) }
+    let(:mock_hash) do
+      {
+        turn_index: 0,
+        players: [player1.as_json, player2.as_json],
+        hand: [],
+        round_results: [result.as_json(player1.name)],
+        winners: []
+      }
+    end
+    let!(:result) do
+      TurnResult.new(
         current_player: Player.new('Player1'), opponent: Player.new('Player2'),
         card_asked_for: 'K', cards_taken: [],
         card_picked_up: nil, goes_again: false, created_book: nil
       )
     end
+    before do
+      game.start
+      player1.hand = []
+      game.results << result
+    end
     it 'returns json that matches schema' do
-      expect(game.as_json('Player1')).to match_json_schema('game')
+      hash = game.as_json('Player1')
+      expect(hash).to eq mock_hash
+      expect(hash.to_json).to match_json_schema('game')
     end
   end
 

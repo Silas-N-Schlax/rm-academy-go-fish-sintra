@@ -89,9 +89,18 @@ describe TurnResult do
     end
   end
 
-  describe '#hash' do
+  describe '#as_json' do
+    let(:mock_hash) do
+      {
+        current_player: current,
+        rank: 'K',
+        went_fishing: true,
+        display: 'Go Fish: Player2 didn\'t have any Ks. You drew a J of Spades and do not get to go again'
+      }
+    end
     it 'returns hash that matches json schema' do
-      expect(results.hash(current).to_json).to match_json_schema('round_result')
+      expect(results.as_json(current)).to eq mock_hash
+      expect(results.as_json(current).to_json).to match_json_schema('round_result')
     end
   end
 

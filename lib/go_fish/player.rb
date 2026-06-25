@@ -55,11 +55,11 @@ class Player
     hand.sort_by { |card| Card.value(card.rank) }
   end
 
-  def hash
+  def as_json
     {
-      'name' => name,
-      'books' => books.map(&:rank),
-      'book_count' => books_size
+      name:,
+      books: books.map(&:rank),
+      book_count: books_size
     }
   end
 

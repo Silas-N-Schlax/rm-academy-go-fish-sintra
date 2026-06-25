@@ -58,10 +58,17 @@ describe Card do
     end
   end
 
-  describe '#hash' do
+  describe '#as_json' do
     let(:card) { described_class.new('K') }
+    let(:mock_hash) do
+      {
+        rank: 'K',
+        suit: 'Spades'
+      }
+    end
     it 'returns hash that matches json schema' do
-      expect(card.hash.to_json).to match_json_schema('card')
+      expect(card.as_json).to eq mock_hash
+      expect(card.as_json.to_json).to match_json_schema('card')
     end
   end
 end

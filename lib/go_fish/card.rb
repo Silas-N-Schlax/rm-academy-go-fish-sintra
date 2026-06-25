@@ -39,10 +39,10 @@ class Card
     rank == other.rank && suit == other.suit
   end
 
-  def hash
+  def as_json
     {
-      'rank' => rank,
-      'suit' => suit
+      rank:,
+      suit:
     }
   end
 
