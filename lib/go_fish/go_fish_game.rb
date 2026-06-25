@@ -114,9 +114,9 @@ class GoFishGame
     player_in_question = find_player(player_name)
     cards = player_in_question.take_cards_of_rank(rank)
 
-    current_player.add_cards(cards) unless cards.empty?
+    created_book = current_player.add_cards(cards) unless cards.empty?
     fishing_card = go_fish(rank) if cards.empty?
-    generate_turn_result(player_in_question, rank, cards, fishing_card, current_player)
+    generate_turn_result(player_in_question, rank, cards, fishing_card, current_player, created_book)
   end
 
   def handle_players_without_cards(opponent)
@@ -149,11 +149,12 @@ class GoFishGame
     card
   end
 
-  def generate_turn_result(opponent, rank, cards, card_picked_up, current_player)
+  def generate_turn_result(opponent, rank, cards, card_picked_up, current_player, created_book)
     results << TurnResult.new(
       current_player: current_player, opponent: opponent,
       card_asked_for: rank, cards_taken: cards,
-      card_picked_up: card_picked_up, goes_again: cards.empty? && card_picked_up.nil?
+      card_picked_up: card_picked_up, goes_again: cards.empty? && card_picked_up.nil?,
+      created_book: created_book
     )
   end
 

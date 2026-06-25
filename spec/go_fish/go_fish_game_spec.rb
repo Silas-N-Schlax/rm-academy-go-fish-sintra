@@ -338,13 +338,19 @@ describe GoFishGame do
     end
   end
   describe '#latest_result' do
-    let(:game) { described_class.new([user1, user2]) }
-    before do
-      game.results << TurnResult.new(
+    let(:game) { described_class.new }
+    let(:result) do
+      TurnResult.new(
         current_player: nil, opponent: nil,
         card_asked_for: 'K', cards_taken: nil,
-        card_picked_up: nil, goes_again: nil
+        card_picked_up: nil, goes_again: nil, created_book: nil
       )
+    end
+    before do
+      game.results << result
+    end
+    it 'returns last result' do
+      expect(game.latest_result).to eq result
     end
   end
 
@@ -355,7 +361,7 @@ describe GoFishGame do
       game.results << TurnResult.new(
         current_player: Player.new('Player1'), opponent: Player.new('Player2'),
         card_asked_for: 'K', cards_taken: [],
-        card_picked_up: nil, goes_again: false
+        card_picked_up: nil, goes_again: false, created_book: nil
       )
     end
     it 'returns json that matches schema' do

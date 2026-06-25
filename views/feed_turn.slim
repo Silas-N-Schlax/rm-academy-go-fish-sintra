@@ -15,3 +15,8 @@
       - if result.go_fish(current_player)
         i.icon.li.li-corner-down-right.icon--large
         .message-bubble #{result.go_fish(current_player)}
+
+    .game-feed__result
+      - if result.book_created(current_player)
+        i.icon.li.li-corner-down-right.icon--large
+        .message-bubble #{result.book_created(current_player)}

@@ -2,15 +2,16 @@
 class TurnResult
   attr_accessor :current_player, :opponent, :cards_taken,
                 :card_asked_for, :card_picked_up,
-                :goes_again
+                :goes_again, :created_book
 
-  def initialize(current_player:, opponent:, cards_taken:, card_asked_for:, card_picked_up:, goes_again:)
+  def initialize(current_player:, opponent:, cards_taken:, card_asked_for:, card_picked_up:, goes_again:, created_book:)
     @current_player = current_player
     @opponent = opponent
     @cards_taken = cards_taken
     @card_asked_for = card_asked_for.upcase
     @card_picked_up = card_picked_up
     @goes_again = goes_again
+    @created_book = created_book
   end
 
   def question
@@ -29,6 +30,12 @@ class TurnResult
     go_fish_all
   end
 
+  def book_created(name)
+    return if created_book.nil?
+
+    "#{current_or_opponent(name)} created a book of #{created_book.rank}s"
+  end
+
   def hash(name)
     {
       'current_player' => current_player.name,
@@ -39,6 +46,12 @@ class TurnResult
   end
 
   private
+
+  def current_or_opponent(name)
+    return 'You' if current_player.name == name
+
+    current_player.name
+  end
 
   def go_fish_current
     return if card_picked_up.nil?
