@@ -28,7 +28,7 @@ class GoFishGame
   end
 
   def run_turn(player_name, rank)
-    return current_player.add_cards([deck.top_card]) if current_player.hand.empty?
+    return current_player.add_cards([deck.top_card]) if current_player.hand.empty? && !deck.empty?
     return if winner || find_player(player_name).nil?
 
     handle_turn(player_name, rank)
@@ -101,7 +101,7 @@ class GoFishGame
       'players' => players.map(&:hash),
       'hand' => current_player.hand.map(&:hash),
       'round_results' => results.map { |result| result.hash(current_player.name) },
-      'winners' => winner ? [winning_player] : nil
+      'winners' => winner ? [winning_player] : []
     }
   end
 
