@@ -86,20 +86,43 @@ describe Server, type: :request do
   describe 'GET /wrong-turn' do
     let!(:encoded) { join_game }
     let(:game) { Server.game }
-    before do
-      visit '/'
-      fill_in :name, with: 'John'
-      click_on 'Join'
-      game.deck.cards = []
-      game.players.first.hand = [Card.new('J'), Card.new('J'), Card.new('J')]
-      game.players.last.hand = [Card.new('J')]
+    let(:json_response1) { JSON.parse(last_response.body)['winners'] }
+    let(:json_response2) { JSON.parse(last_response.body)['winners'] }
+    context 'when the game is over' do
+      before do
+        visit '/'
+        fill_in :name, with: 'John'
+        click_on 'Join'
+        game.deck.cards = []
+        game.players.first.hand = [Card.new('J'), Card.new('J'), Card.new('J')]
+        game.players.last.hand = [Card.new('J')]
+      end
+      it 'returns a response matching the game schema' do
+        post '/game', { 'rank' => 'J', 'player' => 'John' }.to_json, http_header(encoded)
+        expect(last_response).to be_ok
+        expect(last_response.body).to match_json_schema('game')
+        expect(json_response1.first).to be_a String
+        get '/game', {}.to_json, http_header(encoded)
+        expect(json_response2.first).to be_a String
+      end
     end
-    it 'returns a response matching the game schema' do
-      post '/game', { 'rank' => 'J', 'player' => 'John' }.to_json, http_header(encoded)
-      expect(last_response).to be_ok
-      expect(last_response.body).to match_json_schema('game')
-      response = JSON.parse(last_response.body)['winners']
-      expect(response.first).to be_a String
+
+    context 'when the game is not over' do
+      before do
+        visit '/'
+        fill_in :name, with: 'John'
+        click_on 'Join'
+        game.deck.cards = []
+        game.players.first.hand = [Card.new('J'), Card.new('J'), Card.new('J')]
+        game.players.last.hand = [Card.new('J'), Card.new('K')]
+      end
+      it 'returns a response matching the game schema' do
+        post '/game', { 'rank' => 'J', 'player' => 'John' }.to_json, http_header(encoded)
+        expect(last_response).to be_ok
+        expect(last_response.body).to match_json_schema('game')
+        response = JSON.parse(last_response.body)['winners']
+        expect(response.first).to be_nil
+      end
     end
   end
 

@@ -36,7 +36,7 @@ class Server < Sinatra::Base
 
   get '/game' do
     return redirect_to('/') unless authenticate!
-    return redirect_to('/game-over') if game.winner
+    return game_over if game.winner
 
     start_game_if_possible
     respond_to do |f|
@@ -53,7 +53,7 @@ class Server < Sinatra::Base
 
     respond_to do |f|
       f.html { redirect 'game' }
-      f.json { { 'api_key' => api_key }.to_json }
+      f.json { json api_key: api_key }
     end
   end
 
@@ -91,6 +91,13 @@ class Server < Sinatra::Base
   end
 
   private
+
+  def game_over
+    respond_to do |format|
+      format.html { redirect '/game-over' }
+      format.json { json game.as_json(current_json_player_name) }
+    end
+  end
 
   def authenticate!
     return api_auth? if request.accept.any? { it.entry == 'application/json' }
@@ -149,7 +156,7 @@ class Server < Sinatra::Base
   end
 
   def name_valid?(name)
-    return false if name.empty?
+    # return false if name.empty?
     return false if api_keys.values.include?(name)
 
     true
