@@ -89,6 +89,12 @@ describe TurnResult do
     end
   end
 
+  describe '#hash' do
+    it 'returns hash that matches json schema' do
+      expect(results.hash(current).to_json).to match_json_schema('round_result')
+    end
+  end
+
   describe '#add_got_card_record' do
     let(:player) { Player.new }
     let(:card) { Card.new('J') }

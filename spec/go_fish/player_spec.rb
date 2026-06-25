@@ -172,4 +172,11 @@ describe Player do
       expect(player.sort_hand).to eq sorted_array
     end
   end
+
+  describe '#hash' do
+    let(:player) { described_class.new }
+    it 'returns hash that matches json schema' do
+      expect(player.hash.to_json).to match_json_schema('player')
+    end
+  end
 end

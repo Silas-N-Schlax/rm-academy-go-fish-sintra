@@ -57,4 +57,11 @@ describe Card do
       end
     end
   end
+
+  describe '#hash' do
+    let(:card) { described_class.new('K') }
+    it 'returns hash that matches json schema' do
+      expect(card.hash.to_json).to match_json_schema('card')
+    end
+  end
 end

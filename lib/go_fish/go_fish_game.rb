@@ -19,12 +19,12 @@ class GoFishGame
   end
 
   def start
-    deck.cards = [Card.new('2'), Card.new('K')]
-    players.first.hand = [Card.new('J'), Card.new('J'), Card.new('J')]
-    players.last.hand = [Card.new('J')]
+    # deck.cards = [Card.new('2'), Card.new('K')]
+    # players.first.hand = [Card.new('J'), Card.new('J'), Card.new('J')]
+    # players.last.hand = [Card.new('J')]
     # ^ For Testing Only
-    # deck.shuffle_deck
-    # deal
+    deck.shuffle_deck
+    deal
   end
 
   def run_turn(player_name, rank)
