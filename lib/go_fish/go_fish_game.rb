@@ -19,9 +19,9 @@ class GoFishGame
   end
 
   def start
-    # deck.cards = [Card.new('2'), Card.new('K')]
-    # players.first.hand = [Card.new('J'), Card.new('J'), Card.new('J')]
-    # players.last.hand = [Card.new('J')]
+    # deck.cards = [Card.new('J'), Card.new('2'), Card.new('K')]
+    # players.first.hand = [Card.new('J'), Card.new('J')]
+    # players.last.hand = [Card.new('J'), Card.new('3')]
     # ^ For Testing Only
     deck.shuffle_deck
     deal
@@ -156,7 +156,7 @@ class GoFishGame
     results << TurnResult.new(
       current_player: current_player, opponent: opponent,
       card_asked_for: rank, cards_taken: cards,
-      card_picked_up: card_picked_up, goes_again: cards.empty? && card_picked_up.nil?,
+      card_picked_up: card_picked_up, goes_again: current_player.name == self.current_player.name,
       created_book: created_book
     )
   end
