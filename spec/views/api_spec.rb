@@ -93,7 +93,8 @@ describe Server, type: :request do
       post '/game', { 'rank' => 'J', 'player' => 'John' }.to_json, http_header(encoded)
       expect(last_response).to be_ok
       expect(last_response.body).to match_json_schema('game')
-      expect(JSON.parse(last_response.body)['winners']).to_not be_nil
+      response = JSON.parse(last_response.body)['winners']
+      expect(response.first).to be_a String
     end
   end
 
