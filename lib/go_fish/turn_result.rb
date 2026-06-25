@@ -14,6 +14,10 @@ class TurnResult
     @created_book = created_book
   end
 
+  def got_card
+    @got_card ||= []
+  end
+
   def question
     ["#{current_player.name} asked ", opponent.name, ' for any ', card_asked_for, 's']
   end
@@ -34,6 +38,20 @@ class TurnResult
     return if created_book.nil?
 
     "#{current_or_opponent(name)} created a book of #{created_book.rank}s"
+  end
+
+  def got_card_message(name)
+    message_ary = []
+    got_card.map do |record|
+      next message_ary << "You ran out of cards, you drew a #{record.last.rank}" if record.first.name == name
+
+      message_ary << "#{record.first.name} ran out of cards, they drew a card"
+    end
+    message_ary
+  end
+
+  def add_got_card_record(player, card)
+    got_card << [player, card]
   end
 
   def hash(name)

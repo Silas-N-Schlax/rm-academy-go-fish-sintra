@@ -13,4 +13,10 @@
     color: var(--op-color-alerts-warning-on-plus-seven-alt);
     border-color: var(--op-color-alerts-warning-plus-five);
   }
+
+  &.message-bubble--no-cards {
+    background-color: var(--op-color-alerts-danger-plus-five);
+    color: var(--op-color-alerts-danger-on-plus-five-alt);
+    border-color: var(--op-color-alerts-danger-plus-four);
+  }
 }

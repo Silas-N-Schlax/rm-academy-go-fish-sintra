@@ -88,4 +88,46 @@ describe TurnResult do
       expect(results.book_created(current)).to be_nil
     end
   end
+
+  describe '#add_got_card_record' do
+    let(:player) { Player.new }
+    let(:card) { Card.new('J') }
+    before { results.add_got_card_record(player, card) }
+    it 'adds record to array' do
+      expected_size = 1
+      got_card = results.got_card.first
+      expect(results.got_card.size).to eq expected_size
+      expect(got_card.first).to eq player
+      expect(got_card.last).to eq card
+    end
+  end
+
+  describe '#got_card_message' do
+    let(:player1) { Player.new('Player1') }
+    let(:player2) { Player.new('Player2') }
+    let(:card1) { Card.new('K') }
+    let(:card2) { Card.new('J') }
+    let(:expected_message1) { 'You ran out of cards, you drew a K' }
+    let(:expected_message2) { 'Player1 ran out of cards, they drew a card' }
+    before { results.add_got_card_record(player1, card1) }
+    context 'when one player gets a card' do
+      it 'returns an array with one message' do
+        result = results.got_card_message(player1.name)
+        expected_size = 1
+        expect(result.size).to eq expected_size
+        expect(result.first).to eq expected_message1
+      end
+    end
+    context 'when two players get a card' do
+      before { results.add_got_card_record(player2, card2) }
+      it 'returns an array with two messages' do
+        result1 = results.got_card_message(player1.name)
+        result2 = results.got_card_message(player2.name)
+        expected_size = 2
+        expect(result1.size).to eq expected_size
+        expect(result1.first).to eq expected_message1
+        expect(result2.first).to eq expected_message2
+      end
+    end
+  end
 end

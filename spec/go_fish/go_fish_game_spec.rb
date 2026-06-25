@@ -142,11 +142,11 @@ describe GoFishGame do
           end
           it 'adds card to players hand, and its still their turn' do
             game.run_turn('player2', 'J')
-            expected_hand_size = 1
-            expect(player1_data.hand_size).to eq expected_hand_size
+            expected_size = 1
+            expect(player1_data.hand_size).to eq expected_size
             expect(game.current_player.name).to eq player1_data.name
+            expect(game.latest_result.got_card.size).to eq expected_size
           end
-          # ! Test that a message is added to turn result
         end
 
         context 'when player1 takes player2 last card and creates a book' do
@@ -158,9 +158,11 @@ describe GoFishGame do
           it 'gives both players a new card and its still player1 turn' do
             game.run_turn('player2', 'J')
             expected_hand_size = 1
+            expected_record_size = 2
             expect(player1_data.hand_size).to eq expected_hand_size
             expect(player2_data.hand_size).to eq expected_hand_size
             expect(game.current_player.name).to eq player1_data.name
+            expect(game.latest_result.got_card.size).to eq expected_record_size
           end
         end
 

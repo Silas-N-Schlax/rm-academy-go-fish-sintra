@@ -19,12 +19,12 @@ class GoFishGame
   end
 
   def start
-    # deck.cards = [Card.new('J'), Card.new('2'), Card.new('K')]
-    # players.first.hand = [Card.new('J'), Card.new('J')]
-    # players.last.hand = [Card.new('J'), Card.new('K')]
+    deck.cards = [Card.new('2'), Card.new('K')]
+    players.first.hand = [Card.new('J'), Card.new('J'), Card.new('J')]
+    players.last.hand = [Card.new('J')]
     # ^ For Testing Only
-    deck.shuffle_deck
-    deal
+    # deck.shuffle_deck
+    # deal
   end
 
   def run_turn(player_name, rank)
@@ -124,7 +124,11 @@ class GoFishGame
   end
 
   def add_cards(player)
-    player.add_cards([deck.top_card]) if player.empty_hand? && !deck.empty?
+    return unless player.empty_hand? && !deck.empty?
+
+    top_card = deck.top_card
+    player.add_cards([top_card])
+    latest_result.add_got_card_record(player, top_card)
   end
 
   def last_current_player
