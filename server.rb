@@ -49,10 +49,7 @@ class Server < Sinatra::Base
     name = params[:name] || JSON.parse(request.body.read)['name']
     return redirect '/wrong-name' unless name_valid?(name)
 
-    api_key = Base64.urlsafe_encode64("#{name}:#{Time.new.to_f}")
-    session[:api_key] = api_key
-    self.class.api_keys[api_key] = name
-    game.add_player(name)
+    api_key = get_and_save_api_key(name)
 
     respond_to do |f|
       f.html { redirect 'game' }
@@ -85,10 +82,8 @@ class Server < Sinatra::Base
     return redirect_to('/') unless authenticate!
     return redirect_to('/game') unless game.started?
 
-    name = current_player_name || current_json_player_name
-    return redirect('/wrong-turn') unless name == game.current_player.name
+    run_turn
 
-    game.run_turn(player, rank)
     respond_to do |f|
       f.html { redirect '/game' }
       f.json { json game.as_json(current_json_player_name) }
@@ -101,6 +96,21 @@ class Server < Sinatra::Base
     return api_auth? if auth.provided?
 
     web_auth?
+  end
+
+  def get_and_save_api_key(name)
+    api_key = Base64.urlsafe_encode64("#{name}:#{Time.new.to_f}")
+    session[:api_key] = api_key
+    self.class.api_keys[api_key] = name
+    game.add_player(name)
+    api_key
+  end
+
+  def run_turn
+    name = current_player_name || current_json_player_name
+    return redirect('/wrong-turn') unless name == game.current_player.name
+
+    game.run_turn(player, rank)
   end
 
   def redirect_to(path)
