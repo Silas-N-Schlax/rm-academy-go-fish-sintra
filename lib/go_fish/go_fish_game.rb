@@ -99,8 +99,7 @@ class GoFishGame
   def as_json(name)
     current_player = find_player(name)
     {
-      'turn_index' => current_player_idx,
-      'players' => players.map(&:hash),
+      'turn_index' => current_player_idx, 'players' => players.map(&:hash),
       'hand' => current_player.hand.map(&:hash),
       'round_results' => results.map { |result| result.hash(current_player.name) },
       'winners' => winner ? [winning_player.name] : []
