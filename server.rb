@@ -93,7 +93,7 @@ class Server < Sinatra::Base
   private
 
   def authenticate!
-    return api_auth? if auth.provided?
+    return api_auth? if request.accept.any? { it.entry == 'application/json' }
 
     web_auth?
   end
@@ -121,6 +121,7 @@ class Server < Sinatra::Base
   end
 
   def api_auth?
+    halt 401 unless auth.provided? && auth.basic?
     halt 401 unless api_keys[auth.username]
     true
   end

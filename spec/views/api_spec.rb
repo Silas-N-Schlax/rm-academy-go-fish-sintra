@@ -22,7 +22,7 @@ describe Server, type: :request do
 
   describe 'GET /game' do
     it 'prevents unauthorized requests' do
-      get '/game', {}, http_header('')
+      get '/game', {}, { 'HTTP_ACCEPT' => 'application/json', 'CONTENT_TYPE' => 'application/json' }
       expect(last_response.status).to eq 401
     end
 
