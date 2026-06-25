@@ -46,7 +46,7 @@ class Server < Sinatra::Base
   end
 
   post '/join' do
-    name = params[:name] || JSON.parse(request.body.read)['name']
+    name = params[:name]
     return redirect '/wrong-name' unless name_valid?(name)
 
     api_key = get_and_save_api_key(name)
