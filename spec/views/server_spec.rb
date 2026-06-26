@@ -7,6 +7,10 @@ describe Server do
     Server.reset!
   end
 
+  include Rack::Test::Methods
+
+  def app = Server.new
+
   describe '/join' do
     it 'player sees login if they do not have a api_key' do
       visit '/game'
@@ -292,6 +296,15 @@ describe Server do
         expect(session1).to have_current_path '/'
         expect(Server.game.started?).to be false
         expect(Server.api_keys).to be_empty
+      end
+    end
+  end
+
+  describe 'POST /reset' do
+    context 'when someone tries to reset the game when its not over' do
+      it 'redirects to /' do
+        post '/reset', {}, { 'HTTP_ACCEPT' => 'application/html', 'CONTENT_TYPE' => 'application/html' }
+        expect(page).to have_current_path '/'
       end
     end
   end

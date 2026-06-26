@@ -106,10 +106,10 @@ class Server < Sinatra::Base
   post '/reset' do
     respond_to do |format|
       format.html do
-        self.class.reset!
-        redirect '/'
+        self.class.reset! if game.winner
+        return redirect '/'
       end
-      format.json { halt 400 }
+      # format.json { halt 400 }
     end
   end
 
