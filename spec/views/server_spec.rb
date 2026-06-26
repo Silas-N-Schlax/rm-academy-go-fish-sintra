@@ -1,5 +1,6 @@
-require_relative '../../server.rb'
+require_relative '../../server'
 require_relative '../../lib/go_fish/card'
+require_relative '../../lib/go_fish/book'
 
 describe Server do
   after(:each) do
@@ -193,16 +194,58 @@ describe Server do
         session1.visit '/game'
         session1.click_on 'Ask'
       end
-      it 'redirects winner to winning page' do
+      it 'redirects winner to game_over page' do
         expected_path = '/game-over'
-        expected_content = 'GAME OVER!'
+        expected_content = "#{game.winner.name} won the game!"
         expect(session1).to have_current_path(expected_path)
         expect(session1).to have_content(expected_content)
       end
-      it 'revokes api_keys and restarts game' do
+    end
+  end
+
+  describe 'GET /game-over' do
+    let!(:session1) { Capybara::Session.new(:rack_test, Server.new) }
+    let!(:session2) { Capybara::Session.new(:rack_test, Server.new) }
+    let(:sessions) { [session1, session2] }
+    let(:game) { Server.game }
+
+    before do
+      sessions.each_with_index do |session, i|
+        join_game(session, "Player #{i + 1}")
+      end
+    end
+    context 'when the game is not over' do
+      it 'redirects to game' do
+        sessions.each do |session|
+          session.visit 'game-over'
+          expect(session).to have_current_path '/game'
+        end
+      end
+    end
+
+    context 'when the game is over' do
+      before do
+        game.deck.cards = []
+        game.players.each_with_index do |player, i|
+          player.hand = []
+          player.books = [Book.new((i + 4).to_s)]
+        end
+      end
+      it 'resets game and api_keys and redirects to login page' do
+        session1.visit '/game'
+        expect(session1).to have_current_path '/game-over'
+        expect(session1).to have_content(game.winner.name)
+        session1.click_on 'Play Again'
+        expect(session1).to have_current_path '/'
         expect(Server.game.started?).to be false
         expect(Server.api_keys).to be_empty
       end
     end
+  end
+
+  def join_game(session, name)
+    session.visit '/'
+    session.fill_in :name, with: name
+    session.click_on 'Join'
   end
 end

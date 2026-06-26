@@ -72,10 +72,24 @@ class Server < Sinatra::Base
   end
 
   get '/game-over' do
-    self.class.reset!
+    respond_to do |format|
+      format.html do
+        return redirect '/game' unless game.winner
 
-    slim :game_over
-    # ! How to reset if bot wins???
+        slim :game_over, locals: { winner: game.winner&.name }
+      end
+      format.json { halt 400 }
+    end
+  end
+
+  post '/reset' do
+    respond_to do |format|
+      format.html do
+        self.class.reset!
+        redirect '/'
+      end
+      format.json { halt 400 }
+    end
   end
 
   post '/game' do
@@ -94,7 +108,7 @@ class Server < Sinatra::Base
 
   def game_over
     respond_to do |format|
-      format.html { redirect '/game-over' }
+      format.html { redirect 'game-over' }
       format.json { json game.as_json(current_json_player_name) }
     end
   end
