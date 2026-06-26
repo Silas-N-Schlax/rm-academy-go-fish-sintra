@@ -109,7 +109,7 @@ class Server < Sinatra::Base
         self.class.reset! if game.winner
         return redirect '/'
       end
-      # format.json { halt 400 }
+      format.json { halt 400 }
     end
   end
 

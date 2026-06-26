@@ -8,9 +8,7 @@ describe Server, type: :request do
 
   include Rack::Test::Methods
 
-  def app
-    Server.new
-  end
+  def app = Server.new
 
   describe 'GET /join' do
     it 'returns a response matching the join schema' do
@@ -94,6 +92,14 @@ describe Server, type: :request do
     it 'returns 400' do
       encoded = join_game
       get '/lobby', {}, http_header(encoded)
+      expect(last_response.status).to eq 400
+    end
+  end
+
+  describe 'POST /reset' do
+    it 'returns 400' do
+      encoded = join_game
+      post '/reset', {}, http_header(encoded)
       expect(last_response.status).to eq 400
     end
   end
