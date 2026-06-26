@@ -1,0 +1,19 @@
+.container.container--xs
+  .simple-page
+    .simple-page__body
+      .simple-page__logo
+        img.simple-page__logo-img alt='go fish game logo' src='./logo.png'
+
+      .simple-page__form
+        form action='/lobby' method='POST'
+          .form-group
+            h2 Players
+            - players.each do |player|
+              span #{player.name}
+
+          - if can_start_game
+            button.btn.btn--primary.simple-page__button type='submit' Start Game
+          - else
+            button.btn.btn--primary.simple-page__button disabled=true type='submit' Start Game
+
+
