@@ -2,7 +2,7 @@ require_relative '../../server'
 require_relative '../../lib/go_fish/card'
 require_relative '../../lib/go_fish/book'
 
-describe Server do
+describe Server, type: :system  do
   after(:each) do
     Server.reset!
   end

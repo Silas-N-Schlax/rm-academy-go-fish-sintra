@@ -1,7 +1,7 @@
 require_relative '../../server'
 require_relative '../../lib/go_fish/card'
 
-describe Server, type: :request do
+describe Server, type: :system do
   after(:each) do
     Server.reset!
   end
