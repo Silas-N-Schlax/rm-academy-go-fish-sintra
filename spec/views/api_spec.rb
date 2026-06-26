@@ -33,10 +33,19 @@ describe Server, type: :request do
 
     it 'allows authorized requests' do
       encoded = join_game
+      join_game_and_start(page)
       get '/game', {}, http_header(encoded)
       expect(last_response).to be_ok
     end
     it 'returns a response matching the game schema' do
+      encoded = join_game
+      join_game_and_start(page)
+      get '/game', {}, http_header(encoded)
+      expect(last_response).to be_ok
+      expect(last_response.body).to match_json_schema('game')
+    end
+
+    it 'returns a json even if game is not started' do
       encoded = join_game
       get '/game', {}, http_header(encoded)
       expect(last_response).to be_ok
@@ -47,12 +56,10 @@ describe Server, type: :request do
   describe 'POST /game' do
     let!(:encoded) { join_game }
     before do
-      visit '/'
-      fill_in :name, with: 'John'
-      click_on 'Join'
+      join_game_and_start(page)
     end
     it 'returns a response matching the game schema' do
-      post '/game', { 'rank' => 'K', 'player' => 'John' }.to_json, http_header(encoded)
+      post '/game', { 'rank' => 'K', 'player' => 'Web' }.to_json, http_header(encoded)
       expect(last_response).to be_ok
       expect(last_response.body).to match_json_schema('game')
       expect(JSON.parse(last_response.body)['round_results']).to_not be_empty
@@ -83,7 +90,15 @@ describe Server, type: :request do
     end
   end
 
-  describe 'GET /wrong-turn' do
+  describe 'GET /lobby' do
+    it 'returns 400' do
+      encoded = join_game
+      get '/lobby', {}, http_header(encoded)
+      expect(last_response.status).to eq 400
+    end
+  end
+
+  describe 'POST /game' do
     let!(:encoded) { join_game }
     let(:game) { Server.game }
     let(:json_response1) { JSON.parse(last_response.body)['winners'] }
@@ -138,5 +153,12 @@ describe Server, type: :request do
     post '/join', { 'name' => 'Bot' }.to_json, { 'HTTP_ACCEPT' => 'application/json', 'CONTENT_TYPE' => 'application/json' }
     api_key = JSON.parse(last_response.body)['api_key']
     Base64.encode64("#{api_key}:X").strip
+  end
+
+  def join_game_and_start(page)
+    page.visit '/'
+    page.fill_in :name, with: 'Web'
+    page.click_on 'Join'
+    page.click_on 'Start Game'
   end
 end

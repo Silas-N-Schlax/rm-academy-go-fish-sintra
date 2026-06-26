@@ -26,7 +26,7 @@ class Server < Sinatra::Base
   end
 
   get '/' do
-    return redirect_to('/game') if authenticate!
+    return redirect_to('/lobby') if authenticate!
 
     respond_to do |format|
       format.html { slim :login, locals: { errors: nil } }
@@ -35,12 +35,15 @@ class Server < Sinatra::Base
   end
 
   get '/game' do
-    return redirect_to('/') unless authenticate!
+    return redirect_to('/lobby') unless authenticate!
     return game_over if game.winner
 
-    start_game_if_possible
     respond_to do |f|
-      f.html { slim :game, locals: { game: game, current_player: game.find_player(current_player_name) } }
+      f.html do
+        return redirect '/lobby' unless game.started?
+
+        slim :game, locals: { game: game, current_player: game.find_player(current_player_name) }
+      end
       f.json { json game.as_json(current_json_player_name) }
     end
   end
@@ -55,6 +58,24 @@ class Server < Sinatra::Base
       f.html { redirect 'game' }
       f.json { json api_key: api_key }
     end
+  end
+
+  get '/lobby' do
+    return redirect_to('/') unless authenticate!
+    return redirect_to('/game') if game.started?
+
+    respond_to do |format|
+      format.html { slim :lobby, locals: { players: game.players, can_start_game: can_start_game? } }
+      format.json { halt 400 }
+    end
+  end
+
+  post '/lobby' do
+    start_game_if_possible
+
+    return redirect '/lobby' unless game.started?
+
+    redirect '/game'
   end
 
   get '/wrong-name' do
@@ -194,8 +215,14 @@ class Server < Sinatra::Base
 
   def start_game_if_possible
     return if game.started?
-    return unless game.players.size == MIN_GAME_SIZE
+    return unless can_start_game?
 
     game.start
+  end
+
+  def can_start_game?
+    return true if game.players.size == MIN_GAME_SIZE
+
+    false
   end
 end

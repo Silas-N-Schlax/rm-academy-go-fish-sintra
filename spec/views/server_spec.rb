@@ -14,11 +14,12 @@ describe Server do
       expect(page).to have_current_path(expected_path)
     end
 
-    it 'is possible to join a game' do
+    it 'is possible to join a lobby' do
       visit '/'
       fill_in :name, with: 'John'
       click_on 'Join'
       expect(page).to have_content('Players')
+      expect(page).to have_current_path '/lobby'
     end
 
     context 'when multiple players join' do
@@ -32,8 +33,9 @@ describe Server do
           session.fill_in :name, with: "Player #{i + 1}"
           session.click_on 'Join'
         end
+        start_game(session1)
       end
-      it 'each player is displayed on the screen' do
+      it 'each player is displayed on the respective screen' do
         sessions.each do |session|
           session.visit '/game'
         end
@@ -57,7 +59,7 @@ describe Server do
         end
       end
       it 'sends second player back to login with error message' do
-        expected_path = '/game'
+        expected_path = '/lobby'
         expected_path1 = '/wrong-name'
         expected_content = 'That name is already taken'
         expect(session1).to have_current_path(expected_path)
@@ -91,6 +93,53 @@ describe Server do
       end
     end
   end
+  describe 'GET /lobby' do
+    context 'when a player does not have a api_key' do
+      it 'redirects to /' do
+        visit '/lobby'
+        expect(page).to have_current_path '/'
+      end
+    end
+
+    context 'when there is only one player and someone goes to /game' do
+      it 'redirects to /lobby' do
+        join_game(page, 'John')
+        visit '/game'
+        expect(page).to have_current_path '/lobby'
+      end
+    end
+
+    context 'when there are two players and the buttons is pressed' do
+      let!(:session1) { Capybara::Session.new(:rack_test, Server.new) }
+      let!(:session2) { Capybara::Session.new(:rack_test, Server.new) }
+      let(:sessions) { [session1, session2] }
+      before do
+        sessions.each_with_index do |session, i|
+          join_game(session, "Player#{i + 1}")
+        end
+        start_game(session1)
+      end
+      it 'redirects to /game' do
+        sessions.each do |session|
+          session.visit '/lobby'
+          expect(session).to have_current_path '/game'
+        end
+      end
+      it 'starts the game' do
+        expect(Server.game.started?).to be true
+      end
+      it 'sends to /game if game is started' do
+        sessions.each do |session|
+          session.visit '/lobby'
+          expect(session).to have_current_path '/game'
+        end
+      end
+    end
+
+    context 'when there are two or more players and the buttons is pressed' do
+      it 'redirects to /game'
+    end
+  end
 
   describe '/game' do
     context 'when the player does not have a session' do
@@ -112,6 +161,7 @@ describe Server do
             session.fill_in :name, with: "Player #{i + 1}"
             session.click_on 'Join'
           end
+          start_game(session1)
         end
         it 'starts the game' do
           Server.game.players.each do |player|
@@ -162,12 +212,14 @@ describe Server do
         session.fill_in :name, with: "Player #{i + 1}"
         session.click_on 'Join'
       end
+      start_game(session1)
     end
     context 'when a round is played' do
       it 'a card has been added to the current players hand' do
         session1.visit '/game'
         session1.click_on 'Ask'
         expected_count = 8
+        sleep 0.2
         expect(session1).to have_selector('.gf-game__hand .playing-card', count: expected_count, visible: :all)
       end
 
@@ -213,6 +265,7 @@ describe Server do
       sessions.each_with_index do |session, i|
         join_game(session, "Player #{i + 1}")
       end
+      start_game(session1)
     end
     context 'when the game is not over' do
       it 'redirects to game' do
@@ -247,5 +300,10 @@ describe Server do
     session.visit '/'
     session.fill_in :name, with: name
     session.click_on 'Join'
+  end
+
+  def start_game(session)
+    session.visit '/lobby'
+    session.click_on 'Start Game'
   end
 end
