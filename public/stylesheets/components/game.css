@@ -1,13 +1,13 @@
 .gf-game {
   --_gf-side-width: calc(var(--op-size-unit) * 83.5); /* 334px */
-  --_gf-bottom-height: calc(var(--op-size-unit) * 56.5); /* 226px */
+  --_gf-bottom-height: calc(var(--op-size-unit) * 60); /* 240px */
 
   height: 100dvh;
   overflow: hidden;
   display: grid;
   background-color: var(--op-color-neutral-plus-max);
   grid-template-columns: 1fr var(--_gf-side-width);
-  grid-template-rows: 1fr minmax(var(--_gf-bottom-height));
+  grid-template-rows: 1fr var(--_gf-bottom-height);
   grid-template-areas:
    "game-board game-feed"
    "player-hand player-books";
