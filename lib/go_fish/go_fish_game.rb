@@ -34,6 +34,13 @@ class GoFishGame
 
     handle_players_without_cards(player_name)
     next_player_turn if last_current_player.empty_hand?
+    skip_turn_if_needed if turn_skipped? && !winner
+  end
+
+  def skip_turn_if_needed
+    next_player_turn
+
+    skip_turn_if_needed if turn_skipped?
   end
 
   def winner
@@ -52,6 +59,7 @@ class GoFishGame
     new_index = current_player_idx + 1
     first_player_idx = 0
     self.current_player_idx = new_index > players.size - 1 ? first_player_idx : new_index
+    nil
   end
 
   def find_player(name)

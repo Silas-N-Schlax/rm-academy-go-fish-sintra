@@ -6,6 +6,7 @@ require_relative '../../lib/go_fish/turn_result'
 describe GoFishGame do
   let(:player1) { Player.new('player1') }
   let(:player2) { Player.new('player2') }
+  let(:player3) { Player.new('player3') }
   describe '#start' do
     context 'when a game is started with two players' do
       let(:game) { described_class.new([player1, player2]) }
@@ -285,6 +286,7 @@ describe GoFishGame do
         before do
           game.deck.cards = []
           player1_data.hand << Card.new('J')
+          player2_data.hand << Card.new('K')
           game.run_turn('player1', 'A')
         end
         it 'does not give the player a card' do
@@ -294,6 +296,20 @@ describe GoFishGame do
         it 'sets the current player to next player in the queue' do
           expect(game.current_player.name).to eq player2_data.name
         end
+      end
+    end
+    context 'when the next player cannot play' do
+      let(:game) { described_class.new([player1, player2, player3]) }
+      let!(:player1_data) { game.players.first }
+      let!(:player2_data) { game.players[1] }
+      let!(:player3_data) { game.players.last }
+      before do
+        game.deck.cards = []
+        player1_data.hand = [Card.new('J')]
+        game.run_turn('player2', 'J')
+      end
+      it 'skipped them' do
+        expect(game.current_player.name).to eq player1_data.name
       end
     end
   end
