@@ -72,14 +72,6 @@ describe Server, type: :system do
     end
   end
 
-  describe 'GET /wrong-name' do
-    it 'returns 400' do
-      encoded = join_game
-      get '/wrong-name', {}, http_header(encoded)
-      expect(last_response.status).to eq 400
-    end
-  end
-
   describe 'GET /wrong-turn' do
     it 'returns 400' do
       encoded = join_game

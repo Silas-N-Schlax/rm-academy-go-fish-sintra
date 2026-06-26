@@ -64,10 +64,9 @@ describe Server, type: :system  do
       end
       it 'sends second player back to login with error message' do
         expected_path = '/lobby'
-        expected_path1 = '/wrong-name'
         expected_content = 'That name is already taken'
         expect(session1).to have_current_path(expected_path)
-        expect(session2).to have_current_path(expected_path1)
+        expect(session2).to have_current_path '/join'
         expect(session2).to have_content(expected_content)
       end
     end
@@ -79,9 +78,8 @@ describe Server, type: :system  do
         click_on 'Join'
       end
       it 'sends back to login with error message' do
-        expected_path = '/wrong-name'
         expected_content = 'That name is already taken'
-        expect(page).to have_current_path(expected_path)
+        expect(page).to have_current_path '/join'
         expect(page).to have_content(expected_content)
       end
     end
@@ -94,6 +92,37 @@ describe Server, type: :system  do
 
         visit '/'
         expect(page).to have_content('Players')
+      end
+    end
+
+    context 'when a 7th player joins' do
+      let!(:sessions) { [] }
+      let(:session7) { Capybara::Session.new(:rack_test, Server.new) }
+      before do
+        6.times { sessions << Capybara::Session.new(:rack_test, Server.new) }
+        sessions.each_with_index { |session, i| join_game(session, "Player #{i + 1}") }
+      end
+      it 'redirects to join with error message' do
+        expected_error_message = '6 players have already joined the game'
+        join_game(session7, 'Player 7')
+        expect(session7).to have_current_path '/join'
+        expect(session7).to have_content expected_error_message
+      end
+    end
+
+    context 'when a play joins and the game has already been started' do
+      let!(:sessions) { [] }
+      let(:session4) { Capybara::Session.new(:rack_test, Server.new) }
+      before do
+        3.times { sessions << Capybara::Session.new(:rack_test, Server.new) }
+        sessions.each_with_index { |session, i| join_game(session, "Player #{i + 1}") }
+        start_game(sessions.first)
+      end
+      it 'redirects to join with error message' do
+        expected_error_message = 'A game has already been started'
+        join_game(session4, 'Player 4')
+        expect(session4).to have_current_path '/join'
+        expect(session4).to have_content expected_error_message
       end
     end
   end
@@ -138,10 +167,6 @@ describe Server, type: :system  do
           expect(session).to have_current_path '/game'
         end
       end
-    end
-
-    context 'when there are two or more players and the buttons is pressed' do
-      it 'redirects to /game'
     end
   end
 

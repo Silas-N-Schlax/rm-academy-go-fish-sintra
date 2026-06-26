@@ -6,6 +6,13 @@ require_relative 'lib/go_fish/player'
 # Server class + Sinatra App
 class Server < Sinatra::Base
   MIN_GAME_SIZE = 2
+  MAX_GAME_SIZE = 6
+
+  LOGIN_ERRORS = {
+    '1' => 'That name is already taken',
+    '2' => '6 players have already joined the game',
+    '3' => 'A game has already been started'
+  }.freeze
 
   register Sinatra::RespondWith
   use Rack::JSONBodyParser
@@ -50,7 +57,7 @@ class Server < Sinatra::Base
 
   post '/join' do
     name = params[:name]
-    return redirect '/wrong-name' unless name_valid?(name)
+    return unless can_join(name)
 
     api_key = get_and_save_api_key(name)
 
@@ -76,13 +83,6 @@ class Server < Sinatra::Base
     return redirect '/lobby' unless game.started?
 
     redirect '/game'
-  end
-
-  get '/wrong-name' do
-    respond_to do |format|
-      format.html { slim :login, locals: { errors: ['That name is already taken'] } }
-      format.json { halt 400 }
-    end
   end
 
   get '/wrong-turn' do
@@ -221,8 +221,28 @@ class Server < Sinatra::Base
   end
 
   def can_start_game?
-    return true if game.players.size == MIN_GAME_SIZE
+    return true if game.players.size >= MIN_GAME_SIZE
 
     false
+  end
+
+  def can_join(name)
+    errors = []
+    errors << '1' unless name_valid?(name)
+    errors << '2' if game.players.size >= MAX_GAME_SIZE
+    errors << '3' if game.started?
+
+    return true if errors.empty?
+
+    send_login_error(errors)
+    false
+  end
+
+  def send_login_error(error_ids)
+    errors = error_ids.map { |id| LOGIN_ERRORS[id] }
+    respond_to do |format|
+      format.html { slim :login, locals: { errors: errors } }
+      format.json { halt 400 }
+    end
   end
 end
