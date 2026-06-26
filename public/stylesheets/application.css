@@ -16,8 +16,7 @@
 @import './components/game-list.css';
 @import './components/history.css';
 @import './components/leaderboard.css';
-@import './components/login.css';
-@import './components/app-alert.css';
+@import './components/simple-page.css';
 
 /* ^ Optics Overrides */
 @import './components/optics-overrides/text-pair.css';
@@ -26,6 +25,8 @@
 @import './components/optics-overrides/accordion.css';
 @import './components/optics-overrides/icon.css';
 @import './components/optics-overrides/form-error-summary.css';
+@import './components/optics-overrides/form-group.css';
+
 
 
 body {

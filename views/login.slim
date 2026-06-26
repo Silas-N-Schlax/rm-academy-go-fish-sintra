@@ -1,11 +1,11 @@
 
 .container.container--xs
-  .login
-    .login__body
-      .login__logo
-        img.login__logo-img alt='go fish game logo' src='./logo.png'
+  .simple-page
+    .simple-page__body
+      .simple-page__logo
+        img.simple-page__logo-img alt='go fish game logo' src='./logo.png'
 
-      .login__form
+      .simple-page__form
         form action='/join' method='POST'
           .form-group
             input.form-control.form-control--small name='name' type='Text' placeholder='Name' minlength=4
@@ -13,4 +13,4 @@
               .form-error-summary
                 .h2 #{errors.first}
 
-          button.btn.btn--primary.login__button type='submit' Join
+          button.btn.btn--primary.simple-page__button type='submit' Join

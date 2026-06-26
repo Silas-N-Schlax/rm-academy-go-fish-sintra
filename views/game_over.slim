@@ -1,11 +1,12 @@
 .container.container--xs
-  .app-alert
-    .app-alert__body
-      .alert.alert--info.alert--outlined
-        span.material-symbols-outlined.icon.alert__icon task_alt
-        .alert__message
-          .alert__title GAME OVER!
-          .alert__description You won the game!
-        button.btn.btn--no-border.btn--pill.btn--icon.alert__icon
-          a href ='/game'
-            span.material-symbols-outlined.icon.alert__icon close
+  .simple-page
+    .simple-page__body
+      .simple-page__logo
+        img.simple-page__logo-img alt='go fish game logo' src='./logo.png'
+
+      .simple-page__form
+        form action='/reset' method='POST'
+          .form-group
+            h1 #{winner} won the game!
+          button.btn.btn--primary.simple-page__button type='submit' Play Again
+
