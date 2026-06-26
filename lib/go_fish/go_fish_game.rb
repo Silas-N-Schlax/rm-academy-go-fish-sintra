@@ -3,7 +3,7 @@ require_relative 'card'
 require_relative 'turn_result'
 # Go Fish Game Class
 class GoFishGame
-  attr_accessor :deck, :current_player_idx, :results, :players
+  attr_accessor :deck, :current_player_idx, :results, :players, :book_created
 
   SMALL_HAND = 5
   LARGE_HAND = 7
@@ -113,9 +113,9 @@ class GoFishGame
     player_in_question = find_player(player_name)
     cards = player_in_question.take_cards_of_rank(rank)
 
-    created_book = current_player.add_cards(cards) unless cards.empty?
+    self.book_created = current_player.add_cards(cards) unless cards.empty?
     fishing_card = go_fish(rank) if cards.empty?
-    generate_turn_result(player_in_question, rank, cards, fishing_card, current_player, created_book)
+    generate_turn_result(player_in_question, rank, cards, fishing_card, current_player, book_created)
   end
 
   def handle_players_without_cards(opponent)
@@ -147,7 +147,7 @@ class GoFishGame
     card = deck.top_card
     return next_player_turn if card.nil?
 
-    current_player.add_cards([card])
+    self.book_created = current_player.add_cards([card])
     next_player_turn unless card.rank == rank
     card
   end

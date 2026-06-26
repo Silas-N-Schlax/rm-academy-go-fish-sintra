@@ -4,7 +4,7 @@ class TurnResult
                 :card_asked_for, :card_picked_up,
                 :goes_again, :created_book
 
-  def initialize(current_player:, opponent:, cards_taken:, card_asked_for:, card_picked_up:, goes_again:, created_book:)
+  def initialize(current_player:, opponent:, cards_taken:, card_asked_for:, card_picked_up:, goes_again:, created_book: nil)
     @current_player = current_player
     @opponent = opponent
     @cards_taken = cards_taken

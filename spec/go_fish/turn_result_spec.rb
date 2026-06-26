@@ -11,8 +11,7 @@ describe TurnResult do
       cards_taken: [],
       card_asked_for: 'K',
       card_picked_up: Card.new('J'),
-      goes_again: false,
-      created_book: Book.new('J')
+      goes_again: false
     )
   end
   let(:current) { 'Player1' }
@@ -73,6 +72,7 @@ describe TurnResult do
   end
 
   describe '#book_created' do
+    before { results.created_book = Book.new('J') }
     it 'returns message for current player that a book has been created' do
       expected_message = 'You created a book of Js'
       expect(results.book_created(current)).to eq expected_message

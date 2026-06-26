@@ -154,15 +154,19 @@ describe GoFishGame do
             player1_data.hand = [Card.new('J'), Card.new('J'), Card.new('J')]
             player2_data.hand = [Card.new('J')]
             game.deck.cards = [card1, card1]
+            game.run_turn('player2', 'J')
           end
           it 'gives both players a new card and its still player1 turn' do
-            game.run_turn('player2', 'J')
             expected_hand_size = 1
             expected_record_size = 2
             expect(player1_data.hand_size).to eq expected_hand_size
             expect(player2_data.hand_size).to eq expected_hand_size
             expect(game.current_player.name).to eq player1_data.name
             expect(game.latest_result.got_card.size).to eq expected_record_size
+          end
+
+          it 'tells turn results a book was created' do
+            expect(game.latest_result.created_book).to_not be_nil
           end
         end
 
@@ -235,6 +239,17 @@ describe GoFishGame do
 
           it 'they are still current player' do
             expect(game.current_player.name).to eq player1_data.name
+          end
+
+          context 'when the card they picked up creates a book' do
+            before do
+              game.deck.cards.unshift(Card.new('A'))
+              game.players.first.hand = [Card.new('A'), Card.new('A'), Card.new('A')]
+              game.run_turn('player2', 'A')
+            end
+            it 'tells turn results a book was created' do
+              expect(game.latest_result.created_book).to_not be_nil
+            end
           end
         end
       end
