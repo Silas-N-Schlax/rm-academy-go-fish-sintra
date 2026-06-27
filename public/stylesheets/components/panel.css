@@ -16,6 +16,7 @@
 
     &.panel__header--slim {
       display: flex;
+      justify-content: space-between;
       align-items: center;
       min-height: var(--_gf-slim-navbar-height);
       height: var(--_gf-slim-navbar-height);
